@@ -16,6 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from . import views
 
 urlpatterns = [
+    path('clients/add/', views.add_client),
+    path('clients/get/<int:id>/', views.get_client),
+    path('clients/get/', views.get_all_clients),
+    path('clients/edit/<int:id>/', views.edit_client),
+    path('clients/delete/<int:id>/', views.delete_client),
+    path('orders/add/', views.add_order),
+    path('orders/get/<int:id>/', views.get_order),
+    path('orders/get/', views.get_all_orders),
+    path('orders/edit/<int:id>/', views.add_orders),
+    path('orders/delete/<int:id>/', views.delete_orders)
+
 ]
