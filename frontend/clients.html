@@ -1,35 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clients</title>
+    <title>Список клиентов</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
 </head>
 <body>
-    <nav>
-        <button onclick="location.href='index.html'">Home</button>
-        <button onclick="location.href='orders.html'">Orders</button>
-        <button onclick="location.href='login.html'">Login</button>
-    </nav>
-
     <header>
-        <h1>Clients</h1>
+        <h1>Клиенты</h1>
+        <nav>
+            <a href="orders.html">Заказы</a>
+            <a href="clients.html" class="active">Клиенты</a>
+            <a href="login.html">Авторизация</a>
+        </nav>
     </header>
-
     <main>
-        <input type="text" id="clientSearch" placeholder="Search Clients">
-        <button onclick="filterClients()">Filters</button>
-        <button onclick="location.href='add_client.html'">Add Client</button>
+        <!-- Панель инструментов для поиска и добавления клиента -->
+        <div class="toolbar">
+            <input type="search" id="searchClients" placeholder="Поиск клиентов...">
+            <button class="btn" id="filterClientsBtn">Фильтры</button>
+            <button class="btn primary" onclick="location.href='add_client.html'">Добавить клиента</button>
+        </div>
 
-        <ul id="clientList">
-            <!-- Dynamic content from scripts.js -->
-        </ul>
+        <!-- Секция списка клиентов -->
+        <section class="client-list">
+            <h2>Все клиенты</h2>
+            <div class="clients-container">
+                <!-- Пример карточки клиента -->
+                <div class="client-card">
+                    <h3>Иван Иванов</h3>
+                    <p>Email: ivan@example.com</p>
+                    <p>Телефон: +7 999 123 45 67</p>
+                    <button class="btn" onclick="location.href='client_details.html'">Подробнее</button>
+                </div>
+
+                <div class="client-card">
+                    <h3>Мария Смирнова</h3>
+                    <p>Email: maria@example.com</p>
+                    <p>Телефон: +7 999 987 65 43</p>
+                    <button class="btn" onclick="location.href='client_details.html'">Подробнее</button>
+                </div>
+
+                <!-- Дополнительные карточки будут заполняться через JS -->
+            </div>
+        </section>
     </main>
-
-    <footer>
-        <p>&copy; 2024 NULL Systems</p>
-    </footer>
+    <script src="main.js"></script>
 </body>
 </html>
