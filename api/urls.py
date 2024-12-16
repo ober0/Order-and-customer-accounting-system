@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     path('clients/add/', views.add_client),
@@ -28,6 +30,8 @@ urlpatterns = [
     path('orders/get/<int:id>/', views.get_order),
     path('orders/get/', views.get_all_orders),
     path('orders/edit/<int:id>/', views.add_orders),
-    path('orders/delete/<int:id>/', views.delete_orders)
+    path('orders/delete/<int:id>/', views.delete_orders),
 
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
