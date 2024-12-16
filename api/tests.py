@@ -60,6 +60,18 @@ class APIClient:
         else:
             print(response.text)
 
+    def edit_client(self, id, client_data):
+        url = f'{self.base_url}/api/clients/edit/{id}/'
+        headers = {'Authorization': f'Bearer {self.token_manager.access_token}'}
+        response = requests.post(url, headers=headers, data=client_data)
+        if response.status_code == 200:
+            pprint(response.json())
+        elif response.status_code == 401:
+            self.token_manager.refresh_access_token()
+            self.edit_client(id, client_data)
+        else:
+            print(response.text)
+
 
 if __name__ == '__main__':
     BASE_URL = 'http://127.0.0.1:8000'
@@ -75,7 +87,10 @@ if __name__ == '__main__':
         'mobile_phone': None,
         'email': 'onishruslan@yandex.ru'
     }
-    # api_client.add_client(new_client)
 
+    edit_client_data = {
+        'first_name': 'Тестовое имя',
+        'last_name': 'Тестовая фамилия'
+    }
 
-    # api_client.get_all_clients(start_id=25)
+    api_client.edit_client(id=1, client_data=edit_client_data)

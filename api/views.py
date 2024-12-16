@@ -131,10 +131,35 @@ def get_all_clients(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-
+@csrf_exempt
 @jwt_or_csrf_required
 def edit_client(request, id):
-    return None
+    if request.method == 'POST':
+        try:
+            body = request.POST
+            client = get_object_or_404(Clients, id=int(id))
+            print(client)
+            first_name = body.get('first_name', client.first_name)
+            last_name = body.get('last_name', client.last_name)
+            middle_name = body.get('middle_name', client.middle_name)
+            mobile_phone = body.get('mobile_phone', client.mobile_phone)
+            email = body.get('email', client.email)
+
+            client.first_name = first_name
+            client.last_name = last_name
+            client.middle_name = middle_name
+            client.mobile_phone = mobile_phone
+            client.email = email
+            client.save()
+
+            return JsonResponse({
+                'success': True
+            }, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @jwt_or_csrf_required
 def delete_client(request, id):
