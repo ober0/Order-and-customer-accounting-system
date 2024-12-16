@@ -1,34 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Client</title>
+    <title>Добавить клиента</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
 </head>
 <body>
-    <nav>
-        <button onclick="location.href='clients.html'">Clients</button>
-        <button onclick="location.href='orders.html'">Orders</button>
-        <button onclick="location.href='login.html'">Login</button>
-    </nav>
-
     <header>
-        <h1>Add Client</h1>
+        <h1>Добавить клиента</h1>
+        <nav>
+            <a href="clients.html">Назад к клиентам</a>
+        </nav>
     </header>
-
     <main>
         <form id="addClientForm">
-            <input type="text" placeholder="Client Name" required>
-            <input type="email" placeholder="Client Email" required>
-            <input type="tel" placeholder="Client Phone" required>
-            <button type="submit">Submit</button>
+            <label for="clientName">Имя клиента</label>
+            <input type="text" id="clientName" placeholder="Введите имя клиента" required>
+
+            <label for="clientEmail">Email</label>
+            <input type="email" id="clientEmail" placeholder="Введите email клиента" required>
+
+            <label for="clientPhone">Телефон</label>
+            <input type="text" id="clientPhone" placeholder="Введите телефон клиента" required>
+
+            <button type="submit" class="btn primary">Сохранить</button>
         </form>
     </main>
-
-    <footer>
-        <p>&copy; 2024 Order Client System</p>
-    </footer>
 </body>
 </html>

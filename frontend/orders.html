@@ -1,35 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
+    <title>Заказы</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
 </head>
 <body>
-    <nav>
-        <button onclick="location.href='index.html'">Home</button>
-        <button onclick="location.href='clients.html'">Clients</button>
-        <button onclick="location.href='login.html'">Login</button>
-    </nav>
-
     <header>
-        <h1>Orders</h1>
+        <h1>Заказы</h1>
+        <nav>
+            <a href="index.html">На главную</a>
+        </nav>
     </header>
-
     <main>
-        <input type="text" id="orderSearch" placeholder="Search Orders">
-        <button onclick="filterOrders()">Filters</button>
-        <button onclick="location.href='add_order.html'">Add Order</button>
-
-        <ul id="orderList">
-            <!-- Dynamic content from scripts.js -->
-        </ul>
+        <div class="toolbar">
+            <input type="search" placeholder="Поиск заказов" id="searchOrders">
+            <button class="btn" id="filterBtn">Фильтры</button>
+            <button class="btn primary" onclick="location.href='add_order.html'">Добавить заказ</button>
+        </div>
+        <section class="order-list">
+            <!-- Место для заказов (заполняется через JS) -->
+        </section>
     </main>
-
-    <footer>
-        <p>&copy; 2024 NULL Systems</p>
-    </footer>
 </body>
 </html>

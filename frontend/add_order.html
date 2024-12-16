@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить заказ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Добавить заказ</h1>
+        <nav>
+            <a href="orders.html">Назад к заказам</a>
+        </nav>
+    </header>
+    <main>
+        <form id="addOrderForm">
+            <label for="orderName">Название заказа</label>
+            <input type="text" id="orderName" placeholder="Введите название заказа" required>
+
+            <label for="orderClient">Клиент</label>
+            <input type="text" id="orderClient" placeholder="Имя клиента" required>
+
+            <label for="orderDate">Дата</label>
+            <input type="date" id="orderDate" required>
+
+            <button type="submit" class="btn primary">Сохранить</button>
+        </form>
+    </main>
+</body>
+</html>

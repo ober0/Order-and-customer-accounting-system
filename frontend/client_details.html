@@ -1,70 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Details</title>
+    <title>Информация о клиенте</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
 </head>
 <body>
-    <nav>
-        <button onclick="location.href='clients.html'">Clients</button>
-        <button onclick="location.href='orders.html'">Orders</button>
-        <button onclick="location.href='login.html'">Login</button>
-    </nav>
-
     <header>
-        <h1>Client Details</h1>
+        <h1>Информация о клиенте</h1>
+        <nav>
+            <a href="clients.html">Назад к клиентам</a>
+        </nav>
     </header>
-
     <main>
-        <div id="clientDetails">
-            <!-- Dynamic content from scripts.js -->
+        <div class="client-info">
+            <h2>Имя клиента: <span id="clientName"></span></h2>
+            <p>Email: <span id="clientEmail"></span></p>
+            <p>Телефон: <span id="clientPhone"></span></p>
+            <button class="btn" onclick="location.href='user_orders.html'">Открыть заказы клиента</button>
+            <button class="btn danger">Удалить</button>
         </div>
-        <button onclick="editClient()">Edit Client</button>
-        <button onclick="deleteClient()">Delete Client</button>
-        <button onclick="location.href='client_orders.html'">View Orders</button>
     </main>
-
-    <footer>
-        <p>&copy; 2024 NULL Systems</p>
-    </footer>
-</body>
-</html>
-
-<!-- Add Order Page (add_order.html) -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Order</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
-</head>
-<body>
-    <nav>
-        <button onclick="location.href='orders.html'">Orders</button>
-        <button onclick="location.href='clients.html'">Clients</button>
-        <button onclick="location.href='login.html'">Login</button>
-    </nav>
-
-    <header>
-        <h1>Add Order</h1>
-    </header>
-
-    <main>
-        <form id="addOrderForm">
-            <input type="text" placeholder="Order Description" required>
-            <input type="text" placeholder="Client ID" required>
-            <input type="date" required>
-            <button type="submit">Submit</button>
-        </form>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 NULL Systems</p>
-    </footer>
 </body>
 </html>
