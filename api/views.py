@@ -161,9 +161,14 @@ def edit_client(request, id):
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+@csrf_exempt
 @jwt_or_csrf_required
 def delete_client(request, id):
-    return None
+    if request.method == 'DELETE':
+        client = get_object_or_404(Clients, id=id)
+        client.delete()
+        return JsonResponse({'success': True})
+
 
 
 @jwt_or_csrf_required

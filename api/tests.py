@@ -72,6 +72,17 @@ class APIClient:
         else:
             print(response.text)
 
+    def delete_client(self, id):
+        url = f'{self.base_url}/api/clients/delete/{id}/'
+        headers = {'Authorization': f'Bearer {self.token_manager.access_token}'}
+        response = requests.delete(url, headers=headers)
+        if response.status_code == 200:
+            pprint(response.json())
+        elif response.status_code == 401:
+            self.token_manager.refresh_access_token()
+            self.delete_client(id)
+        else:
+            print(response.text)
 
 if __name__ == '__main__':
     BASE_URL = 'http://127.0.0.1:8000'
@@ -93,4 +104,4 @@ if __name__ == '__main__':
         'last_name': 'Тестовая фамилия'
     }
 
-    api_client.edit_client(id=1, client_data=edit_client_data)
+    api_client.delete_client(id=2   )
