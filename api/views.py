@@ -6,25 +6,21 @@ from django.contrib.auth.models import User
 from django.middleware.csrf import CsrfViewMiddleware
 from django.views.decorators.csrf import csrf_exempt
 
+from clients.models import Clients
+
 
 def jwt_or_csrf_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        print("Checking CSRF token...")
-
-        # Инициализируем CSRF Middleware с заглушкой get_response
         csrf_middleware = CsrfViewMiddleware(lambda r: r)
         csrf_result = csrf_middleware.process_view(request, None, (), {})
 
-        # Если process_view ничего не вернул, значит CSRF проверка пройдена
         if csrf_result is None:
-            # Проверим аутентификацию пользователя по сессии
             if hasattr(request, 'user'):
                 if request.user.is_authenticated:
-                    print("CSRF token is valid and user is authenticated by session.")
                     return view_func(request, *args, **kwargs)
                 else:
-                    return JsonResponse({'auth': None})
+                    return JsonResponse({'success': False, 'error':'not auth'})
 
         # Проверяем JWT токен
         auth_header = request.headers.get('Authorization')
@@ -56,12 +52,36 @@ def jwt_or_csrf_required(view_func):
 @csrf_exempt
 @jwt_or_csrf_required
 def add_client(request):
-    return JsonResponse({'auth': request.user.username})
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        middle_name = request.POST.get('middle_name')
+        mobile_phone = request.POST.get('mobile_phone')
+        email = request.POST.get('email')
+
+
+        if not first_name or not last_name or not email:
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        try:
+            client = Clients.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                middle_name=middle_name,
+                mobile_phone=mobile_phone,
+                email=email
+            )
+            client.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False,'error': str(e)})
 
 @jwt_or_csrf_required
 def get_client(request, id):
     return None
 
+
+@csrf_exempt
 @jwt_or_csrf_required
 def get_all_clients(request):
     return None

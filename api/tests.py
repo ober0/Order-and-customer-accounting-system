@@ -11,7 +11,6 @@ class CheckAccessToApi:
         # Получаем токены
         auth_response = requests.post('http://127.0.0.1:8000/api/token/', data=data)
         if auth_response.status_code != 200:
-            print("Authentication failed:", auth_response.json())
             exit()
 
         tokens = auth_response.json()
@@ -22,8 +21,15 @@ class CheckAccessToApi:
         self.make_protected_request()
 
     def make_protected_request(self):
+        data = {
+            'first_name': 'Руслан',
+            'last_name': 'Онищенко',
+            'middle_name': 'Виталиевич',
+            'mobile_phone': None,
+            'email': 'onishruslan@yandex.ru'
+        }
         protected_response = requests.post('http://127.0.0.1:8000/api/clients/add/',
-                                           headers={'Authorization': f'Bearer {self.access_token}'})
+                                           headers={'Authorization': f'Bearer {self.access_token}'}, data=data)
 
         if protected_response.status_code == 200:
             print("Success:", protected_response.json())
