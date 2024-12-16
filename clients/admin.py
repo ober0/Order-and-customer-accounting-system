@@ -4,6 +4,6 @@ from .models import Clients
 
 @admin.register(Clients)
 class ClientsAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'mobile_phone',)
-    search_fields = ('first_name', 'last_name', 'email', 'mobile_phone')
-    ordering = ('first_name',)
+    list_display = ('id', 'first_name', 'last_name', 'email', 'mobile_phone',)
+    search_fields = ('id', 'first_name', 'last_name', 'email', 'mobile_phone')
+    ordering = ('id',)

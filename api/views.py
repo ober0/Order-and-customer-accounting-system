@@ -1,9 +1,12 @@
+import json
+
 import jwt
 from django.http import JsonResponse
 from django.conf import settings
 from functools import wraps
 from django.contrib.auth.models import User
 from django.middleware.csrf import CsrfViewMiddleware
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from clients.models import Clients
@@ -78,13 +81,56 @@ def add_client(request):
 
 @jwt_or_csrf_required
 def get_client(request, id):
-    return None
+    if request.method == 'GET':
+        client = get_object_or_404(Clients, id=id)
+
+        client_data = {
+            'id': client.id,
+            'first_name': client.first_name,
+            'last_name': client.last_name,
+            'middle_name': client.middle_name,
+            'mobile_phone': client.mobile_phone,
+            'email': client.email,
+        }
+        return JsonResponse({'client': client_data})
+
 
 
 @csrf_exempt
 @jwt_or_csrf_required
 def get_all_clients(request):
-    return None
+    if request.method == 'POST':
+        try:
+            start_id = int(request.POST.get('start_id', None))
+            print(start_id)
+            if start_id is None or not isinstance(start_id, int):
+                return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
+
+            clients = Clients.objects.filter(id__gte=start_id).order_by('id')[:20]
+
+            if not clients.exists():
+                return JsonResponse({'clients': [], 'message': 'No clients found'}, status=200)
+
+
+            clients_data = [
+                {
+                    'id': client.id,
+                    'first_name': client.first_name,
+                    'last_name': client.last_name,
+                    'middle_name': client.middle_name,
+                    'mobile_phone': client.mobile_phone,
+                    'email': client.email,
+                }
+                for client in clients
+            ]
+
+            return JsonResponse({'clients': clients_data}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 
 @jwt_or_csrf_required
 def edit_client(request, id):
