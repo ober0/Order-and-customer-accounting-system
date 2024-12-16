@@ -2,9 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
 </head>
 <body>
+    <nav>
+        <button onclick="location.href='clients.html'">Clients</button>
+        <button onclick="location.href='orders.html'">Orders</button>
+        <button onclick="location.href='login.html'">Login</button>
+    </nav>
 
+    <header>
+        <h1>Client Details</h1>
+    </header>
+
+    <main>
+        <div id="clientDetails">
+            <!-- Dynamic content from scripts.js -->
+        </div>
+        <button onclick="editClient()">Edit Client</button>
+        <button onclick="deleteClient()">Delete Client</button>
+        <button onclick="location.href='client_orders.html'">View Orders</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 NULL Systems</p>
+    </footer>
+</body>
+</html>
+
+<!-- Add Order Page (add_order.html) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Order</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <nav>
+        <button onclick="location.href='orders.html'">Orders</button>
+        <button onclick="location.href='clients.html'">Clients</button>
+        <button onclick="location.href='login.html'">Login</button>
+    </nav>
+
+    <header>
+        <h1>Add Order</h1>
+    </header>
+
+    <main>
+        <form id="addOrderForm">
+            <input type="text" placeholder="Order Description" required>
+            <input type="text" placeholder="Client ID" required>
+            <input type="date" required>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 NULL Systems</p>
+    </footer>
 </body>
 </html>

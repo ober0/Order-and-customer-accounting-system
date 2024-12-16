@@ -2,9 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Client</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
 </head>
 <body>
+    <nav>
+        <button onclick="location.href='clients.html'">Clients</button>
+        <button onclick="location.href='orders.html'">Orders</button>
+        <button onclick="location.href='login.html'">Login</button>
+    </nav>
 
+    <header>
+        <h1>Add Client</h1>
+    </header>
+
+    <main>
+        <form id="addClientForm">
+            <input type="text" placeholder="Client Name" required>
+            <input type="email" placeholder="Client Email" required>
+            <input type="tel" placeholder="Client Phone" required>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Order Client System</p>
+    </footer>
 </body>
 </html>

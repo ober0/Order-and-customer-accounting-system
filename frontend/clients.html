@@ -2,9 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
 </head>
 <body>
+    <nav>
+        <button onclick="location.href='index.html'">Home</button>
+        <button onclick="location.href='orders.html'">Orders</button>
+        <button onclick="location.href='login.html'">Login</button>
+    </nav>
 
+    <header>
+        <h1>Clients</h1>
+    </header>
+
+    <main>
+        <input type="text" id="clientSearch" placeholder="Search Clients">
+        <button onclick="filterClients()">Filters</button>
+        <button onclick="location.href='add_client.html'">Add Client</button>
+
+        <ul id="clientList">
+            <!-- Dynamic content from scripts.js -->
+        </ul>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 NULL Systems</p>
+    </footer>
 </body>
 </html>
