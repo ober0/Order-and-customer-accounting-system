@@ -10,206 +10,261 @@ body {
     line-height: 1.6;
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 1rem; /* Добавим общий отступ вокруг страницы */
 }
 
+/* Заголовки */
+h1, h2, h3 {
+    margin-bottom: 1rem;
+    color: var(--heading-color); /* Общий цвет */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Тёмная и светлая темы */
+:root {
+    /* Светлая тема */
+    --bg-color: #f9f9f9;
+    --text-color: #333333;
+    --heading-color: #222222;
+    --header-bg: #e0e0f8;
+    --btn-bg: #f0f0f0;
+    --btn-hover-bg: #e0e0e0;
+    --primary-color: #7a68e3;
+    --danger-color: #e57373;
+    --card-bg: #ffffff;
+    --input-border: #ccc;
+    --input-bg: #ffffff;
+    --label-color: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Тёмная тема */
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --heading-color: #ffffff; /* Светлый цвет для заголовков */
+        --header-bg: #1f1f2f;
+        --btn-bg: #2c2c2c;
+        --btn-hover-bg: #3c3c3c;
+        --primary-color: #bb86fc;
+        --danger-color: #cf6679;
+        --card-bg: #1e1e1e;
+        --input-border: #444;
+        --input-bg: #333;
+        --label-color: #ccc;
+    }
+
+    /* Заголовки в тёмной теме */
+    h2 {
+        color: #f2f2f2; /* Светлый оттенок серого */
+    }
+}
+
+/* Шапка и навигация */
 header {
     background-color: var(--header-bg);
-    color: var(--header-text);
-    padding: 1rem;
+    color: var(--text-color);
+    padding: 2rem; /* Увеличенные отступы сверху и снизу */
     text-align: center;
 }
 
-header nav a {
-    color: var(--header-link);
-    text-decoration: none;
-    margin: 0 1rem;
+header nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Увеличенный отступ между кнопками */
+    margin-top: 1rem;
+    flex-wrap: wrap;
 }
 
+header nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.5rem; /* Увеличенные внутренние отступы */
+    font-size: 1.1rem; /* Чуть больше шрифт */
+    font-weight: 500;
+    color: var(--text-color);
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header nav a:hover {
+    background-color: var(--btn-hover-bg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header nav a.active {
+    background-color: var(--btn-hover-bg); /* Подсветка активного элемента */
+    color: var(--primary-color); /* Цвет текста */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Тень для выделения */
+    font-weight: bold;
+    pointer-events: none; /* Предотвращаем повторный клик */
+}
+
+
+/* Основной контент */
 main {
-    padding: 1rem;
+    padding: 2rem 1.5rem; /* Увеличенные отступы вокруг основного контента */
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Панель инструментов */
+.toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem; /* Увеличенный внешний отступ */
+}
+
+input[type="search"] {
+    width: 100%;
+    padding: 1rem; /* Увеличенный внутренний отступ */
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Текстбоксы логина и пароля */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Плейсхолдеры */
+input::placeholder {
+    color: #aaa; /* Светлый серый для плейсхолдера */
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Стили для меток */
+label {
+    font-size: 0.9rem;
+    color: var(--label-color);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
 /* Кнопки */
 .btn {
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 0;
+    display: inline-block;
+    padding: 1rem 1.5rem; /* Увеличенные внутренние отступы */
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     font-weight: bold;
     cursor: pointer;
     background-color: var(--btn-bg);
-    color: var(--btn-text);
-    transition: background-color 0.3s ease;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1rem; /* Крупнее текст */
 }
 
 .btn:hover {
-    background-color: var(--btn-hover);
+    background-color: var(--btn-hover-bg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn.primary {
     background-color: var(--primary-color);
-    color: #fff;
+    color: #ffffff;
 }
 
-.btn.danger {
-    background-color: var(--danger-color);
-    color: #fff;
+.btn.primary:hover {
+    background-color: #6a5acd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Поля ввода */
-input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="date"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border: 1px solid var(--input-border);
-    border-radius: 5px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-}
-
-label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: bold;
-    color: var(--label-color);
-}
-
-/* Карточки и контейнеры */
-.order-list, .order-details, .client-orders, .client-info, .login-container {
-    background-color: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 2rem auto;
-}
-
-/* Карточка клиента */
+/* Карточки */
 .client-card {
     background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--input-border);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 2rem; /* Увеличенные внутренние отступы */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.client-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .client-card h3 {
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
-.client-card p {
-    margin: 0.25rem 0;
-    font-size: 0.9rem;
-}
-
-.client-card button {
-    margin-top: 0.5rem;
-    width: 100%;
-}
-
-/* Эффект при наведении */
-.client-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Сетка для карточек */
 .clients-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-/* Кнопки навигации */
-header nav a {
-    color: var(--header-link);
-    text-decoration: none;
-    margin: 0 1rem;
-    padding: 0.5rem 1rem;
-    background-color: var(--btn-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Мягкая тень по умолчанию */
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-}
-
-/* Тень при наведении */
-header nav a:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Более жесткая тень */
-    transform: translateY(-2px);
-}
-
-/* Активная страница (выделенная кнопка) */
-header nav a.active {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Самая жесткая тень */
-    font-weight: bold;
-    transform: translateY(-2px);
-}
-
-/* Цвета активной кнопки */
-header nav a.active {
-    background-color: var(--primary-color);
-    color: #ffffff;
-}
-
-/* Тема по умолчанию (светлая) */
-:root {
-    --bg-color: #f9f9f9;
-    --text-color: #333;
-    --header-bg: #e0dff4;
-    --header-text: #333;
-    --header-link: #6200EE;
-    --btn-bg: #e3e3e3;
-    --btn-text: #333;
-    --btn-hover: #d6d6d6;
-    --primary-color: #7a68e3;
-    --danger-color: #e57373;
-    --input-border: #ccc;
-    --input-bg: #fff;
-    --label-color: #555;
-    --card-bg: #fff;
-}
-
-/* Тёмная тема */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #121212;
-        --text-color: #e0e0e0;
-        --header-bg: #1f1f1f;
-        --header-text: #e0e0e0;
-        --header-link: #bb86fc;
-        --btn-bg: #2c2c2c;
-        --btn-text: #e0e0e0;
-        --btn-hover: #3c3c3c;
-        --primary-color: #bb86fc;
-        --danger-color: #cf6679;
-        --input-border: #444;
-        --input-bg: #333;
-        --label-color: #ccc;
-        --card-bg: #1e1e1e;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem; /* Увеличенные отступы между карточками */
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    header {
-        text-align: left;
-        padding: 0.5rem;
-    }
-
-    .toolbar {
+    header nav {
         flex-direction: column;
         gap: 1rem;
     }
 
+    header nav a {
+        width: 100%; /* Растягиваем кнопки на всю ширину */
+        font-size: 1rem;
+    }
+
+    .toolbar {
+        flex-direction: column;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .clients-container {
+        grid-template-columns: 1fr; /* Одна колонка для мобильных */
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 1rem; /* Меньше отступов для маленьких экранов */
+    }
+
+    header nav a {
+        padding: 0.75rem; /* Компактные кнопки */
+        font-size: 0.9rem;
+    }
+
     .btn {
-        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
     }
 }

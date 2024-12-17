@@ -3,14 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Информация о клиенте</title>
+    <title>Название страницы</title>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Подключение Google Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Дополнительный стиль для иконок -->
+    <style>
+        .google-symbols {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            font-size: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Информация о клиенте</h1>
         <nav>
-            <a href="clients.html">Назад к клиентам</a>
+            <a href="clients.html">
+                <span class="google-symbols">apps</span>
+                <div class="label">Назад к клиентам</div>
+            </a>
+            <a href="orders.html">
+                <span class="google-symbols">group</span>
+                <div class="label">Заказы</div>
+            </a>
         </nav>
     </header>
     <main>
@@ -18,7 +42,7 @@
             <h2>Имя клиента: <span id="clientName"></span></h2>
             <p>Email: <span id="clientEmail"></span></p>
             <p>Телефон: <span id="clientPhone"></span></p>
-            <button class="btn" onclick="location.href='user_orders.html'">Открыть заказы клиента</button>
+            <button class="btn" onclick="location.href='clients_orders.html'">Открыть заказы клиента</button>
             <button class="btn danger">Удалить</button>
         </div>
     </main>

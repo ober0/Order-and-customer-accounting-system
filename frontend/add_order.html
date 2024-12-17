@@ -3,14 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добавить заказ</title>
+    <title>Название страницы</title>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Подключение Google Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Дополнительный стиль для иконок -->
+    <style>
+        .google-symbols {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            font-size: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Добавить заказ</h1>
         <nav>
-            <a href="orders.html">Назад к заказам</a>
+            <a href="orders.html" class="active">
+                <span class="google-symbols">apps</span>
+                <div class="label">Назад к заказам</div>
+            </a>
+            <a href="clients.html">
+                <span class="google-symbols">group</span>
+                <div class="label">Клиенты</div>
+            </a>
         </nav>
     </header>
     <main>

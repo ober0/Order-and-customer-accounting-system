@@ -3,16 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список клиентов</title>
+    <title>Название страницы</title>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Подключение Google Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Дополнительный стиль для иконок -->
+    <style>
+        .google-symbols {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            font-size: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: inherit;
+        }
+    </style>
 </head>
+
 <body>
     <header>
         <h1>Клиенты</h1>
         <nav>
-            <a href="orders.html">Заказы</a>
-            <a href="clients.html" class="active">Клиенты</a>
-            <a href="login.html">Авторизация</a>
+            <div class="nav-item">
+                <a href="orders.html">
+                    <span class="hover-overlay"></span>
+                    <span class="google-symbols">apps</span>
+                    <div class="label">Заказы</div>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="clients.html" class="active">
+                    <span class="hover-overlay"></span>
+                    <span class="google-symbols">group</span>
+                    <div class="label">Клиенты</div>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="login.html">
+                    <span class="hover-overlay"></span>
+                    <span class="google-symbols">group</span>
+                    <div class="label">Авторизация</div>
+                </a>
+            </div>
         </nav>
     </header>
     <main>
@@ -22,7 +58,6 @@
             <button class="btn" id="filterClientsBtn">Фильтры</button>
             <button class="btn primary" onclick="location.href='add_client.html'">Добавить клиента</button>
         </div>
-
         <!-- Секция списка клиентов -->
         <section class="client-list">
             <h2>Все клиенты</h2>
@@ -41,8 +76,6 @@
                     <p>Телефон: +7 999 987 65 43</p>
                     <button class="btn" onclick="location.href='client_details.html'">Подробнее</button>
                 </div>
-
-                <!-- Дополнительные карточки будут заполняться через JS -->
             </div>
         </section>
     </main>
