@@ -225,7 +225,10 @@ def get_all_orders(request):
                     Q(description__iregex=search_filter_escape)
             )
 
-            order_by = request.GET.get('order_by', 'id')
+            client = request.POST.get('client_id', None)
+            if client:
+                query &= Q(client__id=client)
+            order_by = request.POST.get('order_by', 'id')
 
             orders = Orders.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
             clients = [order.client for order in orders]
@@ -238,6 +241,7 @@ def get_all_orders(request):
                 {
                     'id': orders[i].id,
                     'client': {
+                        'id': clients[i].id,
                         'full_name': clients[i].get_full_name(),
                         'email': clients[i].email,
                         'mobile_phone': clients[i].mobile_phone
