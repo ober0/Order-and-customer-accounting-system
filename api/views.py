@@ -1,5 +1,8 @@
 import json
+import re
+
 import jwt
+from django.db.models import Q
 from django.http import JsonResponse
 from django.conf import settings
 from functools import wraps
@@ -101,12 +104,25 @@ def get_client(request, id):
 def get_all_clients(request):
     if request.method == 'POST':
         try:
-            start_id = int(request.POST.get('start_id', None))
+            start_id = int(request.POST.get('start_id', 0))
             print(start_id)
             if start_id is None or not isinstance(start_id, int):
                 return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
 
-            clients = Clients.objects.filter(id__gte=start_id).order_by('id')[:20]
+            search_filter = request.POST.get('search', '')
+            search_filter_escape = re.escape(search_filter)
+
+            query = (
+                    Q(first_name__iregex=search_filter_escape) |
+                    Q(last_name__iregex=search_filter_escape) |
+                    Q(middle_name__iregex=search_filter_escape) |
+                    Q(email__iregex=search_filter_escape) |
+                    Q(mobile_phone__iregex=search_filter_escape)
+            )
+            order_by = request.GET.get('order_by', 'id')
+
+            clients = Clients.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
+
 
             if not clients.exists():
                 return JsonResponse({'clients': [], 'message': 'No clients found'}, status=200)
@@ -248,7 +264,17 @@ def get_all_orders(request):
             if start_id is None or not isinstance(start_id, int):
                 return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
 
-            orders = Orders.objects.filter(id__gte=start_id).order_by('id')[:20]
+            search_filter = request.POST.get('search', '')
+            search_filter_escape = re.escape(search_filter)
+
+            query = (
+                    Q(product__iregex=search_filter_escape) |
+                    Q(description__iregex=search_filter_escape)
+            )
+
+            order_by = request.GET.get('order_by', 'id')
+
+            orders = Orders.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
             clients = [order.client for order in orders]
 
             if not orders.exists():
@@ -314,3 +340,4 @@ def edit_order(request, id):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
