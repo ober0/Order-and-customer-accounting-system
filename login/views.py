@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponse, JsonResponse
@@ -36,36 +37,85 @@ def login(request):
 @login_required_custom
 @jwt_or_csrf_required
 def new_user(request):
-    if request.user.is_staff or request.user.is_superuser:
-        if request.method == 'POST':
-            try:
-                client = Clients.objects.create(
-                    first_name=request.POST.get('first_name'),
-                    last_name=request.POST.get('last_name'),
-                    middle_name=request.POST.get('middle_name'),
-                    email=request.POST.get('email'),
-                    mobile_phone=request.POST.get('mobile_phone'),
-                )
+    if request.method == 'POST':
+        if request.user.is_staff or request.user.is_superuser:
+            if request.method == 'POST':
+                try:
+                    client = Clients.objects.create(
+                        first_name=request.POST.get('first_name'),
+                        last_name=request.POST.get('last_name'),
+                        middle_name=request.POST.get('middle_name'),
+                        email=request.POST.get('email'),
+                        mobile_phone=request.POST.get('mobile_phone'),
+                    )
 
-                messages.success(request, 'Успех!')
-                return JsonResponse({'success': True})
-            except Exception as e:
-                messages.error(request, str(e))
-                return JsonResponse({'success': False})
-        elif request.method == 'GET':
-            return render(request, 'login/new_user.html')
-    messages.error(request, 'Недостаточно прав')
-    return redirect('main')
-
+                    messages.success(request, 'Успех!')
+                    return JsonResponse({'success': True})
+                except Exception as e:
+                    messages.error(request, str(e))
+                    return JsonResponse({'success': False})
+            elif request.method == 'GET':
+                return render(request, 'login/new_user.html')
+        messages.error(request, 'Недостаточно прав')
+        return redirect('main')
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 def logout(request):
-    auth_logout(request)
-    return redirect('login')
+    if request.method == 'POST':
+        auth_logout(request)
+        return redirect('login')
 
-
+@csrf_exempt
+@jwt_or_csrf_required
 def edit(request):
-    return None
+    if request.method == 'POST':
+        try:
+            user = request.user
+
+            first_name = request.POST.get('first_name', user.first_name)
+            last_name = request.POST.get('last_name', user.last_name)
+            email = request.POST.get('email', user.email)
+
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+
+            user.save()
+
+            messages.success(request, 'Успешно')
+            return JsonResponse({'success': True})
+        except Exception as e:
+            messages.error(request, 'Произошла ошибка')
+            return JsonResponse({'success': False})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
-def admin_edit(request):
-    return None
+
+@csrf_exempt
+@login_required_custom
+@jwt_or_csrf_required
+def admin_edit(request,id):
+    if request.method == 'POST':
+        if request.user.is_staff or request.user.is_superuser:
+            if request.method == 'POST':
+                try:
+                    user = User.objects.get(id=id)
+
+                    first_name = request.POST.get('first_name', user.first_name)
+                    last_name = request.POST.get('last_name', user.last_name)
+                    email = request.POST.get('email', user.email)
+
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.email = email
+
+                    user.save()
+
+                    messages.success(request, 'Успешно')
+                    return JsonResponse({'success': True})
+                except Exception as e:
+                    messages.error(request, 'Произошла ошибка')
+                    return JsonResponse({'success': False})
+        messages.error(request, 'Недостаточно прав')
+        return redirect('main')
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
