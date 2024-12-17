@@ -1,8 +1,5 @@
 import json
-
 import jwt
-from django.db.models import Subquery
-from django.db.models.functions import Concat
 from django.http import JsonResponse
 from django.conf import settings
 from functools import wraps
@@ -10,7 +7,6 @@ from django.contrib.auth.models import User
 from django.middleware.csrf import CsrfViewMiddleware
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-
 from clients.models import Clients
 from orders.models import Orders
 
@@ -175,7 +171,7 @@ def delete_client(request, id):
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @csrf_exempt
-# @jwt_or_csrf_required
+@jwt_or_csrf_required
 def add_order(request):
     if request.method == 'POST':
         client_id = request.POST.get('client')
@@ -284,7 +280,8 @@ def get_all_orders(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-
+@csrf_exempt
+@jwt_or_csrf_required
 def edit_order(request, id):
     if request.method == 'POST':
         try:
