@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Название страницы</title>
+    <title>Заказы</title>
     <link rel="stylesheet" href="styles.css">
 
     <!-- Подключение Google Material Symbols -->
@@ -46,9 +46,15 @@
             <button class="btn" id="filterBtn">Фильтры</button>
             <button class="btn primary" onclick="location.href='add_order.html'">Добавить заказ</button>
         </div>
+        <div style="text-align: center; margin-top: 8rem;">
+            <a href="index.html" class="btn">На главную</a>
+        </div>
         <section class="order-list">
             <!-- Место для заказов (заполняется через JS) -->
         </section>
     </main>
+    <footer style="padding: 1rem; text-align: center; background-color: var(--header-bg); color: var(--text-color); margin-top: 2rem;">
+        <p style="margin: 0; font-size: 0.9rem;">&copy; 2024 NULL Systems. Все правы защищены законом.</p>
+    </footer>
 </body>
 </html>

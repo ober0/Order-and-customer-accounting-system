@@ -3,66 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Название страницы</title>
+    <title>Добро пожаловать</title>
     <link rel="stylesheet" href="styles.css">
 
     <!-- Подключение Google Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
-    <!-- Дополнительный стиль для иконок -->
-    <style>
-        .google-symbols {
-            font-family: "Material Symbols Outlined";
-            font-weight: normal;
-            font-style: normal;
-            font-size: 1.2rem;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-            color: inherit;
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <h1>Навигация</h1>
-        <nav>
-            <a href="orders.html" class="active">
+    <!-- Шапка страницы -->
+    <header style="padding: 1.5rem 1rem; text-align: center; background-color: var(--header-bg);">
+        <h1 style="margin-bottom: 1rem; font-size: 2rem;">Система управления</h1>
+        <nav style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+            <a href="orders.html" class="active" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                 <span class="google-symbols">apps</span>
-                <div class="label">Заказы</div>
+                <span>Заказы</span>
             </a>
-            <a href="clients.html">
+            <a href="clients.html" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                 <span class="google-symbols">group</span>
-                <div class="label">Клиенты</div>
+                <span>Клиенты</span>
             </a>
-            <a href="login.html">
-                <span class="google-symbols">group</span>
-                <div class="label">Авторизация</div>
+            <a href="login.html" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                <span class="google-symbols">login</span>
+                <span>Авторизация</span>
             </a>
         </nav>
     </header>
-    <main>
+
+    <!-- Основной контент страницы -->
+    <main style="max-width: 900px; margin: 2rem auto; padding: 2rem; text-align: center; background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <section>
-            <h2>Добро пожаловать в систему!</h2>
-            <p>Выберите раздел для работы: заказы или клиенты.</p>
+            <h2 style="margin-bottom: 1rem; font-size: 1.75rem; color: var(--heading-color);">Добро пожаловать в систему!</h2>
+            <p style="font-size: 1.1rem; color: var(--text-color); line-height: 1.8;">
+                Используйте навигацию выше, чтобы перейти в раздел <strong>Заказы</strong> или <strong>Клиенты</strong>.
+                Войдите в систему для доступа к дополнительным возможностям.
+            </p>
         </section>
     </main>
-    <footer>
-        <p>© 2024 NULL Systems</p>
+
+    <!-- Подвал страницы -->
+    <footer style="padding: 1rem; text-align: center; background-color: var(--header-bg); color: var(--text-color); margin-top: 2rem;">
+        <p style="margin: 0; font-size: 0.9rem;">&copy; 2024 NULL Systems. Все правы защищены законом.</p>
     </footer>
+
+    <!-- Скрипт -->
     <script src="main.js"></script>
 </body>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style>
-    .google-symbols {
-        font-family: "Material Symbols Outlined";
-        font-weight: normal;
-        font-style: normal;
-        font-size: 1.2rem;
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 0.5rem;
-        color: inherit;
-    }
-    </style>
 </html>
