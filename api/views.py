@@ -284,10 +284,36 @@ def get_all_orders(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-@jwt_or_csrf_required
-def delete_orders(request):
-    return None
 
+def edit_order(request, id):
+    if request.method == 'POST':
+        try:
+            body = request.POST
+            order = get_object_or_404(Orders, id=int(id))
 
-def edit_order():
-    return None
+            client_id = body.get('client_id', order.client.id)
+
+            client = get_object_or_404(Clients, id=int(client_id))
+            product = body.get('product', order.product)
+            quantity = body.get('quantity', order.quantity)
+            price = body.get('price', order.price)
+            description = body.get('description', order.description)
+            status = body.get('status', order.status)
+
+            order.client = client
+            order.product = product
+            order.quantity = quantity
+            order.price = price
+            order.description = description
+            order.status = status
+
+            order.save()
+
+            return JsonResponse({
+                'success': True
+            }, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
