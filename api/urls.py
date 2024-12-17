@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from login import views as login_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -32,6 +33,8 @@ urlpatterns = [
     path('orders/edit/<int:id>/', views.edit_order),
     path('orders/delete/<int:id>/', views.delete_order),
 
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
+
+    path('login/new/', login_views.new_user)
 ]
