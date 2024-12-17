@@ -84,6 +84,31 @@ class APIClient:
         else:
             print(response.text)
 
+    def add_order(self, product):
+        url = f'{self.base_url}/api/orders/add/'
+        headers = {'Authorization': f'Bearer {self.token_manager.access_token}'}
+        response = requests.post(url, headers=headers, data=product)
+        if response.status_code == 200:
+            print(response.json())
+        elif response.status_code == 401:
+            self.token_manager.refresh_access_token()
+            self.add_order(product)
+        else:
+            print(response.text)
+
+    def get_order(self, id):
+        url = f'{self.base_url}/api/orders/get/{id}/'
+        headers = {'Authorization': f'Bearer {self.token_manager.access_token}'}
+        response = requests.post(url, headers=headers)
+        if response.status_code == 200:
+            print(response.json())
+        elif response.status_code == 401:
+            self.token_manager.refresh_access_token()
+            self.add_order(product)
+        else:
+            print(response.text)
+
+
 if __name__ == '__main__':
     BASE_URL = 'http://127.0.0.1:8000'
     USERNAME = 'admin'
@@ -99,9 +124,22 @@ if __name__ == '__main__':
         'email': 'onishruslan@yandex.ru'
     }
 
+    # api_client.add_client(new_client)
     edit_client_data = {
         'first_name': 'Тестовое имя',
         'last_name': 'Тестовая фамилия'
     }
 
-    api_client.delete_client(id=2   )
+
+    # api_client.delete_client(id=2)
+
+    product = {
+        'client': 1,
+        'product': 'Тест',
+        'quantity': 2,
+        'price': 229,
+    }
+
+    # api_client.add_order(product)
+
+    # api_client.get_order(1)

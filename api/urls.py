@@ -29,8 +29,8 @@ urlpatterns = [
     path('orders/add/', views.add_order),
     path('orders/get/<int:id>/', views.get_order),
     path('orders/get/', views.get_all_orders),
-    path('orders/edit/<int:id>/', views.add_orders),
-    path('orders/delete/<int:id>/', views.delete_orders),
+    path('orders/edit/<int:id>/', views.edit_order),
+    path('orders/delete/<int:id>/', views.delete_order),
 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

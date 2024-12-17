@@ -1,6 +1,8 @@
 import json
 
 import jwt
+from django.db.models import Subquery
+from django.db.models.functions import Concat
 from django.http import JsonResponse
 from django.conf import settings
 from functools import wraps
@@ -10,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from clients.models import Clients
+from orders.models import Orders
 
 
 def jwt_or_csrf_required(view_func):
@@ -17,6 +20,7 @@ def jwt_or_csrf_required(view_func):
     def wrapper(request, *args, **kwargs):
         csrf_middleware = CsrfViewMiddleware(lambda r: r)
         csrf_result = csrf_middleware.process_view(request, None, (), {})
+
 
         if csrf_result is None:
             if hasattr(request, 'user'):
@@ -52,7 +56,7 @@ def jwt_or_csrf_required(view_func):
 
     return wrapper
 
-@csrf_exempt
+
 @jwt_or_csrf_required
 def add_client(request):
     if request.method == 'POST':
@@ -81,7 +85,7 @@ def add_client(request):
 
 @jwt_or_csrf_required
 def get_client(request, id):
-    if request.method == 'GET':
+    if request.method == 'POST':
         client = get_object_or_404(Clients, id=id)
 
         client_data = {
@@ -138,7 +142,7 @@ def edit_client(request, id):
         try:
             body = request.POST
             client = get_object_or_404(Clients, id=int(id))
-            print(client)
+
             first_name = body.get('first_name', client.first_name)
             last_name = body.get('last_name', client.last_name)
             middle_name = body.get('middle_name', client.middle_name)
@@ -168,24 +172,75 @@ def delete_client(request, id):
         client = get_object_or_404(Clients, id=id)
         client.delete()
         return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+# @jwt_or_csrf_required
+def add_order(request):
+    if request.method == 'POST':
+        client_id = request.POST.get('client')
+        product = request.POST.get('product')
+        quantity = request.POST.get('quantity')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+
+        if not product or not price:
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        client = get_object_or_404(Clients, id=int(client_id))
+        try:
+            order = Orders.objects.create(
+                client=client,
+                product=product,
+                quantity=int(quantity),
+                price=int(price),
+                description=description
+            )
+            order.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
-
-@jwt_or_csrf_required
-def add_orders(request):
-    return None
-
+@csrf_exempt
 @jwt_or_csrf_required
 def get_order(request, id):
-    return None
+    if request.method == 'POST':
+        try:
+            order = get_object_or_404(Orders, id=id)
+            client = order.client
 
-@jwt_or_csrf_required
-def add_order(request, id):
-    return None
+            order_data = {
+                'client':{
+                    'full_name': client.get_full_name(),
+                    'email': client.email,
+                    'mobile_phone': client.mobile_phone
+                },
+                'product': order.product,
+                'quantity': order.quantity,
+                'price': order.price,
+                'total_price': order.total_price,
+                'description': order.description,
+                'status': order.status,
+                'created_at': order.created_at.strftime("%d.%m.%Y %H:%M")
+            }
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
 
+        return JsonResponse({'client': order_data})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
 @jwt_or_csrf_required
-def delete_order(request):
-    return None
+def delete_order(request, id):
+    if request.method == 'DELETE':
+        order = get_object_or_404(Orders, id=id)
+        order.delete()
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
 
 @jwt_or_csrf_required
 def get_all_orders(request):
@@ -193,4 +248,8 @@ def get_all_orders(request):
 
 @jwt_or_csrf_required
 def delete_orders(request):
+    return None
+
+
+def edit_order():
     return None
