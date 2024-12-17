@@ -212,6 +212,7 @@ def get_order(request, id):
             client = order.client
 
             order_data = {
+                'id': order.id,
                 'client':{
                     'full_name': client.get_full_name(),
                     'email': client.email,
@@ -241,10 +242,47 @@ def delete_order(request, id):
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
-
+@csrf_exempt
 @jwt_or_csrf_required
 def get_all_orders(request):
-    return None
+    if request.method == 'POST':
+        try:
+            start_id = int(request.POST.get('start_id', None))
+
+            if start_id is None or not isinstance(start_id, int):
+                return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
+
+            orders = Orders.objects.filter(id__gte=start_id).order_by('id')[:20]
+            clients = [order.client for order in orders]
+
+            if not orders.exists():
+                return JsonResponse({'orders': [], 'message': 'No orders found'}, status=200)
+
+
+            orders_data = [
+                {
+                    'id': orders[i].id,
+                    'client': {
+                        'full_name': clients[i].get_full_name(),
+                        'email': clients[i].email,
+                        'mobile_phone': clients[i].mobile_phone
+                    },
+                    'product': orders[i].product,
+                    'quantity': orders[i].quantity,
+                    'price': orders[i].price,
+                    'total_price': orders[i].total_price,
+                    'description': orders[i].description,
+                    'status': orders[i].status,
+                    'created_at': orders[i].created_at.strftime("%d.%m.%Y %H:%M")
+                } for i in range(orders.count())
+            ]
+
+            return JsonResponse({'orders': orders_data}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @jwt_or_csrf_required
 def delete_orders(request):
