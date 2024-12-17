@@ -1,6 +1,8 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from .decorators import login_required_custom
 
-# Create your views here.
+
+
+@login_required_custom
 def main(request):
     return JsonResponse({})

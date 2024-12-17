@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth</title>
+    <style>
+        .error{
+            border: red 1px solid;
+        }
+    </style>
+</head>
+<body>
+<form action="/login/" method="post">
+    {% csrf_token %}
+    <input type="text" name="login" id="login" class="{% if error %}error{% endif %}" placeholder="Логин или почта">
+    <input type="password" name="password" id="password" class="{% if error %}error{% endif %}" placeholder="Пароль">
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit">Войти</button>
+</form>
+</body>
+</html>

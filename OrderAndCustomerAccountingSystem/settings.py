@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'reports',
     'rest_framework',
     'rest_framework_simplejwt',
+    'login'
 ]
 
 REST_FRAMEWORK = {

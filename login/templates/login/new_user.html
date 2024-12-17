@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>new user</title>
+    <style>
+        /* Стили для подсветки пустых полей */
+        .error {
+            border: 2px solid red;
+            background-color: #ffe6e6;
+        }
+    </style>
+</head>
+<body>
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+
+    <form id="userForm" method="post">
+        {% csrf_token %}
+        <input type="text" name="first_name" id="first_name" placeholder="Имя" required>
+        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" required>
+        <input type="text" name="middle_name" id="middle_name" placeholder="Отчество">
+        <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Телефон" required>
+        <input type="email" name="email" id="email" placeholder="Email">
+        <input type="button" id="submit" value="Создать">
+    </form>
+
+    <div id="responseMessage"></div>
+
+    <script>
+        document.querySelector('#submit').addEventListener('click', function () {
+            const form = document.getElementById('userForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+
+            // Убираем старые ошибки
+            inputs.forEach(input => input.classList.remove('error'));
+
+            // Проверяем каждое поле с required
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('error'); // Добавляем красное обрамление
+                    isValid = false;
+                }
+            });
+
+            // Если форма не прошла валидацию, выводим сообщение и останавливаем отправку
+            if (!isValid) {
+                document.getElementById('responseMessage').innerHTML =
+                    '<p style="color: red;">Пожалуйста, заполните все обязательные поля.</p>';
+                return;
+            }
+
+            // Собираем данные и отправляем запрос
+            const formData = new FormData(form);
+
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseMessage').innerHTML =
+                    `<p style="color: green;">${data.message || 'Пользователь создан успешно!'}</p>`;
+                form.reset(); // Очищаем форму после успешного ответа
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').innerHTML =
+                    `<p style="color: red;">Произошла ошибка: ${error.message}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
