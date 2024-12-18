@@ -37,28 +37,31 @@ def login(request):
 @login_required_custom
 @jwt_or_csrf_required
 def new_user(request):
-    if request.method == 'POST':
-        if request.user.is_staff or request.user.is_superuser:
-            if request.method == 'POST':
-                try:
-                    client = Clients.objects.create(
-                        first_name=request.POST.get('first_name'),
-                        last_name=request.POST.get('last_name'),
-                        middle_name=request.POST.get('middle_name'),
-                        email=request.POST.get('email'),
-                        mobile_phone=request.POST.get('mobile_phone'),
-                    )
+    if request.user.is_staff or request.user.is_superuser:
+        if request.method == 'POST':
+            try:
+                staff = request.POST.get('staff', 'off')
+                print(staff)
 
-                    messages.success(request, 'Успех!')
-                    return JsonResponse({'success': True})
-                except Exception as e:
-                    messages.error(request, str(e))
-                    return JsonResponse({'success': False})
-            elif request.method == 'GET':
-                return render(request, 'login/new_user.html')
-        messages.error(request, 'Недостаточно прав')
-        return redirect('main')
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
+                user = User(first_name=request.POST.get('first_name'),
+                    last_name=request.POST.get('last_name'),
+                    username=request.POST.get('username'),
+                    email=request.POST.get('email'),
+                    is_staff=True if staff == 'on' else False)
+                user.set_password(request.POST.get('password'))
+
+                user.save()
+
+
+                messages.success(request, 'Успех!')
+                return JsonResponse({'success': True})
+            except Exception as e:
+                messages.error(request, str(e))
+                return JsonResponse({'success': False})
+        elif request.method == 'GET':
+            return render(request, 'login/new_user.html')
+    messages.error(request, 'Недостаточно прав')
+    return redirect('main')
 
 def logout(request):
     if request.method == 'POST':

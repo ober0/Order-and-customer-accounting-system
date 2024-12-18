@@ -19,10 +19,11 @@
     <form id="userForm" method="post">
         {% csrf_token %}
         <input type="text" name="first_name" id="first_name" placeholder="Имя" required>
-        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" required>
-        <input type="text" name="middle_name" id="middle_name" placeholder="Отчество">
-        <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Телефон" required>
-        <input type="email" name="email" id="email" placeholder="Email">
+        <input type="text" name="last_name" id="last_name" placeholder="Фамилия">
+        <input type="email" name="email" id="email" placeholder="Email" required>
+        <input type="text" name="username" id="username" placeholder="логин" required   >
+        <input type="radio" name="staff" id="staff">
+        <input type="password" name="password" id="password" placeholder="Пароль" required>
         <input type="button" id="submit" value="Создать">
     </form>
 
