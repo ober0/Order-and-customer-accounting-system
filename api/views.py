@@ -164,8 +164,11 @@ def add_order(request):
                 description=description
             )
             order.save()
-
-            return JsonResponse({'success': True})
+            try:
+                messages.success(request, 'Успех')
+            except:
+                pass
+            return JsonResponse({'success': True, 'id': order.id})
         except Exception as e:
             try:
                 messages.error(request, str(e))
