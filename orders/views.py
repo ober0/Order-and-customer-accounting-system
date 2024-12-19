@@ -20,7 +20,7 @@ def order(request, id):
     context = {'order_id': id}
     context = addUserData(request, context)
 
-    get_object_or_404(Orders, id=id)
+    get_object_or_404(Orders, id=int(id))
 
     return render(request, 'orders/order.html', context)
 
@@ -29,6 +29,14 @@ def edit_order(request, id):
     context = {'order_id': id}
     context = addUserData(request, context)
 
-    get_object_or_404(Orders, id=id)
+    get_object_or_404(Orders, id=int(id))
 
     return render(request, 'orders/edit_order.html', context)
+
+
+def add_order(request):
+    context = {}
+    context = addUserData(request, context)
+
+
+    return render(request, 'orders/add_order.html', context)
