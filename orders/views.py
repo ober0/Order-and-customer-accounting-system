@@ -29,4 +29,6 @@ def edit_order(request, id):
     context = {'order_id': id}
     context = addUserData(request, context)
 
+    get_object_or_404(Orders, id=id)
+
     return render(request, 'orders/edit_order.html', context)
