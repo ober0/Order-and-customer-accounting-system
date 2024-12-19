@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиенты</title>
+</head>
+<body>
+<div class="clients">
+
+</div>
+</body>
+<script>
+    function loadClients() {
+        let start_id = 1   //Надо изменить
+        let search = 'dqw'  //Надо изменить
+
+
+        let formData = new FormData()
+        formData.append('start_id', start_id)
+        formData.append('search', search)
+
+        fetch('/api/clients/get/', {
+            method: 'POST',
+            headers:{
+                'X-CSRFtoken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+            })
+    }
+
+    loadClients()
+</script>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>client #{{ client_id }}</title>
+</head>
+<body>
+    <div class="client"></div>
+</body>
+
+<script>
+    fetch('/api/clients/get/{{ client_id }}/', {
+        method:'POST',
+        headers: {
+            'X-CSRFtoken': '{{ csrf_token }}'
+        },
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result)
+    })
+</script>
+</html>

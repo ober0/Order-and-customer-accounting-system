@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>orders</title>
+</head>
+<body>
+    <div class="orders">
+
+    </div>
+</body>
+<script>
+    function loadClients() {
+        let start_id = 1   //Надо изменить
+        let search = 'тест'  //Надо изменить
+        let order_by = '-id'  //Надо изменять
+
+        let formData = new FormData()
+        formData.append('start_id', start_id)
+        formData.append('search', search)
+        formData.append('order_by', order_by)
+
+        fetch('/api/orders/get/', {
+            method: 'POST',
+            headers:{
+                'X-CSRFtoken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+            })
+    }
+
+    loadClients()
+</script>
+</html>
