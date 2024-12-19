@@ -27,7 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'http://95.164.3.6',
+    'http://95.164.3.6:8001',
+    'http://127.0.0.1',
+]
 
 CSRF_COOKIE_SECURE = False  # Включите, если используете HTTPS
 SESSION_COOKIE_SECURE = False

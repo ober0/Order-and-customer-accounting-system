@@ -1,5 +1,7 @@
 import json
 import re
+
+from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -203,6 +205,10 @@ def delete_order(request, id):
     if request.method == 'DELETE':
         order = get_object_or_404(Orders, id=id)
         order.delete()
+        try:
+            messages.success(request, 'Успешно удалено!')
+        except:
+            pass
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
