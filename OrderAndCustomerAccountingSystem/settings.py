@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['*']
+
+CSRF_COOKIE_SECURE = False  # Включите, если используете HTTPS
+SESSION_COOKIE_SECURE = False
+
 
 # Application definition
 
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'login'
 ]
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
