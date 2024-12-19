@@ -164,8 +164,13 @@ def add_order(request):
                 description=description
             )
             order.save()
+
             return JsonResponse({'success': True})
         except Exception as e:
+            try:
+                messages.error(request, str(e))
+            except:
+                pass
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -281,8 +286,8 @@ def edit_order(request, id):
 
             client = get_object_or_404(Clients, id=int(client_id))
             product = body.get('product', order.product)
-            quantity = body.get('quantity', order.quantity)
-            price = body.get('price', order.price)
+            quantity = float(body.get('quantity', order.quantity))
+            price = float(body.get('price', order.price))
             description = body.get('description', order.description)
             status = body.get('status', order.status)
 
