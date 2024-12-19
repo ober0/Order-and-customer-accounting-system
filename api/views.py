@@ -189,6 +189,7 @@ def get_order(request, id):
             order_data = {
                 'id': order.id,
                 'client':{
+                    'id': client.id,
                     'full_name': client.get_full_name(),
                     'email': client.email,
                     'mobile_phone': client.mobile_phone
