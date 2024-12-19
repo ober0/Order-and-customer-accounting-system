@@ -5,7 +5,17 @@
     <title>order #{{ order_id }}</title>
 </head>
 <body>
-    <div class="order"></div>
+    <div class="order">
+        <div class="data">
+
+        </div>
+        <div class="buttons">
+            <a href="/orders/{{ order_id }}/edit/">Изменить</a>
+
+            <input id="delete-btn" type="button" value="Удалить">
+
+        </div>
+    </div>
 </body>
 
 <script>
@@ -18,6 +28,17 @@
     .then(response => response.json())
     .then(result => {
         console.log(result)
+    })
+
+    document.getElementById('delete-btn').addEventListener('click', function () {
+        fetch('/api/orders/delete/{{ order_id }}/',{
+            method: 'DELETE',
+            headers:{'X-CSRFtoken':'{{csrf_token}}'}
+        })
+            .then(response => response.json())
+            .then(result => {
+                window.location.href = '/orders/'
+            })
     })
 </script>
 </html>
