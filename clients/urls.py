@@ -21,4 +21,6 @@ from . import views
 urlpatterns = [
     path('', views.clientsView, name='clients'),
     path('<int:id>/', views.clientView, name='client'),
+    path('<int:id>/edit/', views.edit_client, name='edit_client'),
+    path('add/', views.add_client, name='add_client'),
 ]
