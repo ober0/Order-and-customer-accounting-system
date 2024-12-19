@@ -228,6 +228,8 @@ def get_all_orders(request):
         try:
             start_id = int(request.POST.get('start_id', None))
 
+            status = request.POST.get('status', 'Pending')
+
             if start_id is None or not isinstance(start_id, int):
                 return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
 
@@ -244,7 +246,7 @@ def get_all_orders(request):
                 query &= Q(client__id=client)
             order_by = request.POST.get('order_by', 'id')
 
-            orders = Orders.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
+            orders = Orders.objects.filter(status=status).filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
             clients = [order.client for order in orders]
 
             if not orders.exists():
