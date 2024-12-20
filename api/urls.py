@@ -36,5 +36,9 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
 
-    path('login/new/', login_views.new_user)
+    path('login/new/', login_views.new_user),
+
+    path('reports/new/', views.add_report),
+    path('reports/get/<int:id>/', views.get_report),
+    path('reports/get/', views.get_all_reports),
 ]

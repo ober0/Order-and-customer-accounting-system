@@ -5,6 +5,9 @@
     <title>Main page</title>
 </head>
 <body>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
     {{ username }}
 
     <form action="/login/logout/" method="post">

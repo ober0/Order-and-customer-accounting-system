@@ -339,3 +339,14 @@ def edit_order(request, id):
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+
+def add_report(request):
+    return None
+
+
+def get_report(request):
+    return None
+
+
+def get_all_reports(request):
+    return None

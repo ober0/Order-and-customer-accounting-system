@@ -1,60 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>orders</title>
-</head>
-<body>
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
-<a href='/orders/add/'>Добавить</a>
-    <div class="orders"></div>
-</body>
-<script>
-    function loadClients() {
-        let start_id = 1   // Измените по необходимости
-        let search = 'тест'  // Измените по необходимости
-        let order_by = '-id'  // Измените по необходимости
-        let status = 'Pending'  // Измените по необходимости
-        let client_id = {{ client_id }}
-        let formData = new FormData()
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>orders</title>
+    </head>
+    <body>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    <a href='/orders/add/'>Добавить</a>
+        <div class="orders"></div>
+    </body>
+    <script>
+        function loadClients() {
+            let start_id = 1   // Измените по необходимости
+            let search = ''  // Измените по необходимости
+            let order_by = '-id'  // Измените по необходимости
+            let status = 'Pending'  // Измените по необходимости
+            let client_id = '{{ client_id }}'
 
-        formData.append('start_id', start_id)
-        formData.append('search', search)
-        formData.append('order_by', order_by)
-        formData.append('status', status)
-        if (client_id){
-            formData.append('client_id', client_id)
+            let formData = new FormData()
+
+            formData.append('start_id', start_id)
+            formData.append('search', search)
+            formData.append('order_by', order_by)
+            formData.append('status', status)
+            if (client_id){
+                formData.append('client_id', client_id)
+            }
+            fetch('/api/orders/get/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.querySelector('.orders').innerHTML = result.orders
+                    .map(order => `
+                        <div class="order-item">
+                            <a href="${order.id}">Заказ #${order.id}:</a>
+                            <p>Продукт: ${order.product}</p>
+                            <p>Количество: ${order.quantity} шт</p>
+                            <p>Цена за единицу: ${order.price} руб</p>
+                            <p>Общая стоимость: ${order.total_price} руб</p>
+                            <p>Описание: ${order.description}</p>
+                            <p>Статус: ${order.status}</p>
+                            <p>Создан: ${order.created_at}</p>
+                        </div>
+                    `)
+                    .join('')
+            })
+
+            .catch(error => console.error('Ошибка:', error))
         }
-        fetch('/api/orders/get/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(result => {
-            document.querySelector('.orders').innerHTML = result.orders
-                .map(order => `
-                    <div class="order-item">
-                        <a href="${order.id}">Заказ #${order.id}:</a>
-                        <p>Продукт: ${order.product}</p>
-                        <p>Количество: ${order.quantity} шт</p>
-                        <p>Цена за единицу: ${order.price} руб</p>
-                        <p>Общая стоимость: ${order.total_price} руб</p>
-                        <p>Описание: ${order.description}</p>
-                        <p>Статус: ${order.status}</p>
-                        <p>Создан: ${order.created_at}</p>
-                    </div>
-                `)
-                .join('')
-        })
 
-        .catch(error => console.error('Ошибка:', error))
-    }
-
-    loadClients()
-</script>
-</html>
+        loadClients()
+    </script>
+    </html>
