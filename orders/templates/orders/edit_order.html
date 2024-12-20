@@ -5,6 +5,9 @@
     <title>Edit Order</title>
 </head>
 <body>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
     <div class="order">
         <h1>Редактирование заказа</h1>
         <form id="order-form">
@@ -106,10 +109,10 @@
             .then(result => {
                 console.log(result)
                 if (result.success){
-                    window.location.href = '/orders/?msg=successadd';
+                    window.location.href = `/orders/${result.id}/`;
                 }
                 else {
-                    window.location.href = '/orders/?msg=erroradd';
+                    window.location.href = `/orders/${result.id}/`;
                 }
 
             })

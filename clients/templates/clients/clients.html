@@ -5,31 +5,43 @@
     <title>Клиенты</title>
 </head>
 <body>
-<div class="clients">
-
-</div>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+<a href="/clients/add/">Добавить</a>
+<div class="clients"></div>
 </body>
 <script>
     function loadClients() {
-        let start_id = 1   //Надо изменить
-        let search = 'dqw'  //Надо изменить
+        let start_id = 1   // Измените по необходимости
 
 
         let formData = new FormData()
         formData.append('start_id', start_id)
-        formData.append('search', search)
 
         fetch('/api/clients/get/', {
             method: 'POST',
-            headers:{
-                'X-CSRFtoken': '{{ csrf_token }}'
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
             },
             body: formData
         })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-            })
+        .then(response => response.json())
+        .then(result => {
+            document.querySelector('.clients').innerHTML = result.clients
+                .map(client => `
+                    <div class="client-item">
+                        <a href="${client.id}">${client.id}</a>
+                        <p>Имя: ${client.first_name}</p>
+                        <p>Фамилия: ${client.last_name}</p>
+                        <p>Отчество: ${client.middle_name || 'Не указано'}</p>
+                        <p>Номер телефона: ${client.mobile_phone || 'Не указано'}</p>
+                        <p>Email: ${client.email}</p>
+                    </div>
+                `)
+                .join('')
+        })
+        .catch(error => console.error('Ошибка:', error))
     }
 
     loadClients()

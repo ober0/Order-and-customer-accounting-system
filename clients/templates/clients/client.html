@@ -2,22 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>client #{{ client_id }}</title>
+    <title>Client #{{ client_id }}</title>
 </head>
 <body>
-    <div class="client"></div>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
+    <div class="client">
+        <div class="data"></div>
+        <div class="buttons">
+            <a href="/clients/{{ client_id }}/edit/">Изменить</a>
+            <input id="delete-btn" type="button" value="Удалить">
+        </div>
+    </div>
+
+    <a href="/orders/?client_id={{ client_id }}">Заказы клиента</a>
 </body>
 
 <script>
+    // Получение данных клиента
     fetch('/api/clients/get/{{ client_id }}/', {
-        method:'POST',
+        method: 'POST',
         headers: {
-            'X-CSRFtoken': '{{ csrf_token }}'
+            'X-CSRFToken': '{{ csrf_token }}'
         },
     })
     .then(response => response.json())
     .then(result => {
-        console.log(result)
+        if (result.client) {
+            const client = result.client;
+            document.querySelector('.data').innerHTML = `
+                <div class="client-details">
+                    <h2>Детали клиента #${client.id}</h2>
+                    <p><strong>Имя:</strong> ${client.first_name} ${client.middle_name} ${client.last_name}</p>
+                    <p><strong>Email:</strong> ${client.email}</p>
+                    <p><strong>Телефон:</strong> ${client.mobile_phone}</p>
+                </div>
+            `;
+        } else {
+            document.querySelector('.data').innerHTML = '<p>Клиент не найден.</p>';
+        }
     })
+    .catch(error => console.error('Ошибка:', error));
+
+    // Удаление клиента
+    document.getElementById('delete-btn').addEventListener('click', function () {
+        fetch('/api/clients/delete/{{ client_id }}/', {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                window.location.href = '/clients/';
+            } else {
+                alert('Ошибка при удалении клиента');
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
 </script>
 </html>

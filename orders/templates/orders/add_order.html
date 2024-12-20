@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
     <input type="text" name="client" id="client" value="2" >
     <input type="text" name="product" id="product" placeholder="Продукт">
     <input type="text" name="quantity" id="quantity" placeholder="Кол-во">
