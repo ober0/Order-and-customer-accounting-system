@@ -1,14 +1,23 @@
 import json
 import re
+from datetime import timedelta
 
+import pytz
+from reportlab.lib import fonts
+
+from reports.models import Report
 from django.contrib import messages
-from django.db.models import Q
-from django.http import JsonResponse
+from django.db.models import Q, Sum
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from clients.models import Clients
 from orders.models import Orders
 from .decorators import jwt_or_csrf_required
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from io import BytesIO
 
 
 @jwt_or_csrf_required
@@ -339,14 +348,138 @@ def edit_order(request, id):
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-
+@csrf_exempt
+@jwt_or_csrf_required
 def add_report(request):
-    return None
+    if request.method == 'POST':
+        try:
+            period = request.POST.get('period', 'month')
+
+            period_days = {
+                'week': 7,
+                'month': 30,
+                'year': 365,
+            }
+
+            time_ago = timezone.now() - timedelta(days=period_days[period])
+
+            # Заказы за выбранный период
+            orders = Orders.objects.filter(created_at__gte=time_ago)
+            order_count = orders.count()
+            order_total_sum = sum([float(order.total_price) for order in orders])
+            order_avg_sum = order_total_sum / order_count if order_count > 0 else 0
+            completed_orders_count = orders.filter(status='Completed').count()
+
+            # Клиенты, добавленные за выбранный период
+            clients = Clients.objects.filter(added_at__gte=time_ago)
+
+            # Создаем отчет
+            report = Report(
+                period=period,
+                new_orders_count=order_count,
+                new_clients_count=clients.count(),
+                total_orders_sum=order_total_sum,
+                avg_order_sum=order_avg_sum,
+                completed_orders_count=completed_orders_count,
+            )
+            report.save()
+            try:
+                messages.success(request, f'Успешно!')
+            except:
+                pass
+            return JsonResponse({'success': True, 'id': report.id})
+
+        except Exception as e:
+            try:
+                messages.error(request, f'Ошибка: {str(e)}')
+            except:
+                pass
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
-def get_report(request):
-    return None
+def generate_txt(report):
+    txt_buffer = BytesIO()
 
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    moscow_time = report.date_created.astimezone(moscow_tz)
 
+    months_russian = [
+        'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
+        'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'
+    ]
+    formatted_date = f"{moscow_time.day} {months_russian[moscow_time.month - 1]} {moscow_time.year} года, {moscow_time.strftime('%H:%M')}"
+
+    txt_content = (
+        f"Отчет за период: {report.get_period_display()}\n"
+        f"Дата создания: {formatted_date}\n"
+        f"Кол-во новых заказов: {report.new_orders_count}\n"
+        f"Кол-во новых клиентов: {report.new_clients_count}\n"
+        f"Сумма новых заказов: {report.total_orders_sum}\n"
+        f"Средняя сумма заказов: {report.avg_order_sum}\n"
+        f"Кол-во выполненных заказов: {report.completed_orders_count}\n\n"
+    )
+
+    txt_buffer.write(txt_content.encode('utf-8'))
+    txt_buffer.seek(0)
+    return txt_buffer
+
+@csrf_exempt
+def get_report(request, id):
+    try:
+        report = Report.objects.get(id=id)
+
+        txt_buffer = generate_txt(report)
+
+        response = HttpResponse(txt_buffer, content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename=report_{id}.txt'
+        return response
+    except Report.DoesNotExist:
+        return JsonResponse({'error': 'Report not found'}, status=404)
+
+@csrf_exempt
+@jwt_or_csrf_required
 def get_all_reports(request):
-    return None
+    reports = Report.objects.order_by('-id').all()
+    reports_data = []
+
+
+    for report in reports:
+        moscow_tz = pytz.timezone('Europe/Moscow')
+        moscow_time = report.date_created.astimezone(moscow_tz)
+
+        months_russian = [
+            'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
+            'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'
+        ]
+        formatted_date = f"{moscow_time.day} {months_russian[moscow_time.month - 1]} {moscow_time.year} года, {moscow_time.strftime('%H:%M')}"
+
+
+        reports_data.append({
+            'id': report.id,
+            'period': report.period,
+            'new_orders_count': report.new_orders_count,
+            'new_clients_count': report.new_clients_count,
+            'total_orders_sum': str(report.total_orders_sum),
+            'avg_order_sum': str(report.avg_order_sum),
+            'completed_orders_count': report.completed_orders_count,
+            'date_created':formatted_date
+        })
+
+    return JsonResponse({'reports': reports_data})
+
+@csrf_exempt
+@jwt_or_csrf_required
+def get_report(request, id):
+    try:
+        report = Report.objects.get(id=id)
+
+        txt_buffer = generate_txt(report)
+
+        response = HttpResponse(txt_buffer, content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename=report_{id}.txt'
+        return response
+    except Report.DoesNotExist:
+        return JsonResponse({'error': 'Report not found'}, status=404)
