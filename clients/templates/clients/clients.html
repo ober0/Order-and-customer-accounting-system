@@ -8,16 +8,16 @@
 {% for message in messages %}
     <p>{{ message }}</p>
 {% endfor %}
+<a href="/clients/add/">Добавить</a>
 <div class="clients"></div>
 </body>
 <script>
     function loadClients() {
         let start_id = 1   // Измените по необходимости
-        let search = 'dqw'  // Измените по необходимости
+
 
         let formData = new FormData()
         formData.append('start_id', start_id)
-        formData.append('search', search)
 
         fetch('/api/clients/get/', {
             method: 'POST',
@@ -31,6 +31,7 @@
             document.querySelector('.clients').innerHTML = result.clients
                 .map(client => `
                     <div class="client-item">
+                        <a href="${client.id}">${client.id}</a>
                         <p>Имя: ${client.first_name}</p>
                         <p>Фамилия: ${client.last_name}</p>
                         <p>Отчество: ${client.middle_name || 'Не указано'}</p>

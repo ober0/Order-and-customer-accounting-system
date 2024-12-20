@@ -33,7 +33,7 @@ def add_client(request):
                 email=email
             )
             client.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'id':client.id})
         except Exception as e:
             return JsonResponse({'success': False,'error': str(e)})
 
@@ -60,7 +60,7 @@ def get_all_clients(request):
     if request.method == 'POST':
         try:
             start_id = int(request.POST.get('start_id', 0))
-            print(start_id)
+
             if start_id is None or not isinstance(start_id, int):
                 return JsonResponse({'error': 'start_id parameter is required and must be an integer'}, status=400)
 
@@ -123,11 +123,20 @@ def edit_client(request, id):
             client.email = email
             client.save()
 
+            try:
+                messages.success(request, f'Успех')
+            except:
+                pass
             return JsonResponse({
-                'success': True
+                'success': True,
+                'id': client.id
             }, status=200)
 
         except Exception as e:
+            try:
+                messages.error(request, f'Ошибка {str(e)}')
+            except:
+                pass
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
@@ -138,6 +147,11 @@ def delete_client(request, id):
     if request.method == 'DELETE':
         client = get_object_or_404(Clients, id=id)
         client.delete()
+        messages.success(request, 'Успешно')
+        try:
+            messages.success(request, f'Успех')
+        except:
+            pass
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -306,11 +320,21 @@ def edit_order(request, id):
 
             order.save()
 
+            try:
+                messages.success(request, f'Успех')
+            except:
+                pass
+
             return JsonResponse({
-                'success': True
+                'success': True,
+                'id': order.id
             }, status=200)
 
         except Exception as e:
+            try:
+                messages.error(request, f'Ошибка: {str(e)}')
+            except:
+                pass
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)

@@ -7,12 +7,11 @@ from orders.models import Orders
 def orders(request):
     context = {}
     context = addUserData(request, context)
+    client_id = request.GET.get('client_id')
+    if client_id:
+        context['client_id'] = client_id
 
-    msg = request.GET.get('msg', None)
-    if msg == 'successadd':
-        messages.success(request, 'Успешно!')
-    elif msg == 'erroradd':
-        messages.error(request, 'Ошибка добавления')
+
     return render(request, 'orders/orders.html', context)
 
 

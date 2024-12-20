@@ -8,6 +8,7 @@
 {% for message in messages %}
     <p>{{ message }}</p>
 {% endfor %}
+<a href='/orders/add/'>Добавить</a>
     <div class="orders"></div>
 </body>
 <script>
@@ -16,13 +17,16 @@
         let search = 'тест'  // Измените по необходимости
         let order_by = '-id'  // Измените по необходимости
         let status = 'Pending'  // Измените по необходимости
-
+        let client_id = {{ client_id }}
         let formData = new FormData()
+
         formData.append('start_id', start_id)
         formData.append('search', search)
         formData.append('order_by', order_by)
         formData.append('status', status)
-
+        if (client_id){
+            formData.append('client_id', client_id)
+        }
         fetch('/api/orders/get/', {
             method: 'POST',
             headers: {
