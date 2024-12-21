@@ -1,61 +1,75 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>orders</title>
-    </head>
-    <body>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-    <a href='/orders/add/'>Добавить</a>
-        <div class="orders"></div>
-    </body>
-    <script>
-        function loadClients() {
-            let start_id = 1   // Измените по необходимости
-            let search = ''  // Измените по необходимости
-            let order_by = '-id'  // Измените по необходимости
-            let status = 'Pending'  // Измените по необходимости
-            let client_id = '{{ client_id }}'
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказы</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-            let formData = new FormData()
+    <link rel="stylesheet" href="{% static 'orders/css/orders.css' %}">
+</head>
+<body>
 
-            formData.append('start_id', start_id)
-            formData.append('search', search)
-            formData.append('order_by', order_by)
-            formData.append('status', status)
-            if (client_id){
-                formData.append('client_id', client_id)
-            }
-            fetch('/api/orders/get/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                document.querySelector('.orders').innerHTML = result.orders
-                    .map(order => `
-                        <div class="order-item">
-                            <a href="${order.id}">Заказ #${order.id}:</a>
-                            <p>Продукт: ${order.product}</p>
-                            <p>Количество: ${order.quantity} шт</p>
-                            <p>Цена за единицу: ${order.price} руб</p>
-                            <p>Общая стоимость: ${order.total_price} руб</p>
-                            <p>Описание: ${order.description}</p>
-                            <p>Статус: ${order.status}</p>
-                            <p>Создан: ${order.created_at}</p>
-                        </div>
-                    `)
-                    .join('')
-            })
+    {% include 'main/header.html' %}
+    {% block admin_header %}{% endblock %}
 
-            .catch(error => console.error('Ошибка:', error))
-        }
 
-        loadClients()
-    </script>
-    </html>
+    <main class="custom-padding">
+        {% include 'main/notifications.html' %}
+
+        {% csrf_token %}
+
+        <section id="search-and-btn">
+            <div style="width: 200px">
+                <select id="status" name="status" class="form-control">
+                    <option value="Pending">В ожидании</option>
+                    <option value="Completed">Завершен</option>
+                    <option value="Cancelled">Отменен</option>
+                </select>
+            </div>
+            <div class="input-group" style="width: 400px">
+                <input type="text" class="form-control" placeholder="Поиск по словам" name="search" id="search" value="{{ search|escape }}">
+                <div class="input-group-append" style="display: block !important">
+                     <button class="btn btn-primary " id="search-go" type="button">Искать</button>
+                </div>
+            </div>
+            
+            <div class="btns">
+                <a href="{% url 'add_order' %}" class="btn btn-primary">Добавить заказ</a>
+            </div>
+        </section>
+
+
+        <section id="table">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th id="sort-id" data-column="id" class="sortable">ID <span id="arrow-id" class="arrow"></span></th>
+                            <th id="sort-product" data-column="product" class="sortable">Наименование <span id="arrow-product" class="arrow"></span></th>
+                            <th id="sort-quantity" data-column="quantity" class="sortable">Количество <span id="arrow-quantity" class="arrow"></span></th>
+                            <th id="sort-price" data-column="price" class="sortable">Цена <span id="arrow-price" class="arrow"></span></th>
+                            <th id="sort-total_price" data-column="total_price" class="sortable">Сумма <span id="arrow-total_price" class="arrow"></span></th>
+                            <th id="sort-client" data-column="client">Клиент</th>
+                            <th id="sort-status" data-column="status">Статус</th>
+                            <th id="sort-created_at" data-column="created_at">Дата создания</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody id="orders-list">
+
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'orders/js/loadMore.js' %}"></script>
+</body>
+</html>
