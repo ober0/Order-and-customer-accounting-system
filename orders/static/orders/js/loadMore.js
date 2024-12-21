@@ -23,11 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         const parentEl = document.querySelector('#orders-list');
         const rows = parentEl ? parentEl.querySelectorAll('tr') : [];
+        const client_id = document.getElementById('client_id').value
+
         let start_id = 0;
 
          if (rows.length > 0) {
             start_id = rows.length
-        }
+         }
 
         const searchValue = document.getElementById('search').value;
         const statusSelect = document.getElementById('status');
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('start_id', start_id);
         formData.append('order_by', currentOrderBy);
         formData.append('status', status);
-
+        formData.append('client_id', client_id)
         fetch('/api/orders/get/', {
             method: 'POST',
             headers: {
