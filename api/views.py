@@ -83,7 +83,7 @@ def get_all_clients(request):
                     Q(email__iregex=search_filter_escape) |
                     Q(mobile_phone__iregex=search_filter_escape)
             )
-            order_by = request.GET.get('order_by', 'id')
+            order_by = request.POST.get('order_by', 'id')
 
             clients = Clients.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
 

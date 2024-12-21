@@ -3,7 +3,7 @@
 <header>
 <nav class="navbar navbar-expand-xl navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand " href="/">
+    <a class="navbar-brand " href="">
       <img src="{% static 'main/img/logo.png' %}" alt="LOGO" height="60">
     </a>
 
@@ -23,7 +23,7 @@
         </li>
         {% if isAdmin %}
           <li class="nav-item">
-          <a class="nav-link" href="/login/new/">Новый работник</a>
+          <p style="margin-bottom: 0" class="nav-link" href="">Новый работник</p>
         </li>
           {% endif %}
       </ul>
@@ -31,7 +31,7 @@
         <hr>
       <ul class="navbar-nav" style="align-items: center">
           <li>
-              <a class="nav-link" href="">Выйти</a>
+              <a id="exit-btn" class="nav-link" href="">Выйти</a>
           </li>
 
         <li class="nav-item user-logo">
@@ -44,4 +44,14 @@
 
   </div>
 </nav>
+    <script>
+        document.getElementById('exit-btn').addEventListener('click', function () {
+            fetch('/login/logout/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFtoken': '{{ csrf_token }}'
+                }
+            })
+        })
+    </script>
 </header>
