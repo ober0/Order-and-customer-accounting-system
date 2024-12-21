@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateArrow(column, 'asc');
             }
 
-            const parentEl = document.querySelector('#orders-list');
+            const parentEl = document.querySelector('#clients-list');
             if (parentEl) {
                 parentEl.innerHTML = '';
             }
