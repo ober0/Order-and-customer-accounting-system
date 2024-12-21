@@ -6,6 +6,8 @@ class Clients(models.Model):
     middle_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Отчество')
     mobile_phone = models.CharField(max_length=15, null=True, blank=True, verbose_name='Номер телефона')
     email = models.EmailField(max_length=100, null=False, blank=False, verbose_name='Эл. почта')
+    added_at = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         verbose_name = 'Клиент'

@@ -1,0 +1,47 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+<header>
+<nav class="navbar navbar-expand-xl navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand " href="/">
+      <img src="{% static 'main/img/logo.png' %}" alt="LOGO" height="60">
+    </a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul style="justify-content: left" class="navbar-nav mx-auto text-center">
+        <li class="nav-item">
+          <a class="nav-link" href="/orders/">Заказы</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/clients/">Клиенты</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/reports/">Отчеты</a>
+        </li>
+        {% if isAdmin %}
+          <li class="nav-item">
+          <a class="nav-link" href="/login/new/">Новый работник</a>
+        </li>
+          {% endif %}
+      </ul>
+      <!-- Кнопки справа -->
+        <hr>
+      <ul class="navbar-nav" style="align-items: center">
+          <li>
+              <a class="nav-link" href="">Выйти</a>
+          </li>
+
+        <li class="nav-item user-logo">
+          <img style="margin-bottom: 0" width="45" src="{% static 'main/img/user.png' %}" class="nav-link">
+        </li>
+
+      </ul>
+    </div>
+
+
+  </div>
+</nav>
+</header>
