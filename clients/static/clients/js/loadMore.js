@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let start_id = 0;
 
         if (rows.length > 0) {
-            start_id = Math.max(...Array.from(rows).map(row => parseInt(row.id) || 0));
-            start_id = Number(start_id) + 1;
+            start_id = rows.length
         }
 
         const searchValue = document.getElementById('search').value;

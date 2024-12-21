@@ -85,7 +85,7 @@ def get_all_clients(request):
             )
             order_by = request.POST.get('order_by', 'id')
 
-            clients = Clients.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
+            clients = Clients.objects.filter(query).order_by(order_by)[start_id:start_id+20]
 
 
             if not clients.exists():
@@ -270,7 +270,7 @@ def get_all_orders(request):
                 query &= Q(client__id=client)
             order_by = request.POST.get('order_by', 'id')
 
-            orders = Orders.objects.filter(status=status).filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
+            orders = Orders.objects.filter(status=status).filter(query).order_by(order_by)[start_id:start_id+20]
             clients = [order.client for order in orders]
 
             if not orders.exists():
