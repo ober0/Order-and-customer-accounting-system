@@ -31,6 +31,7 @@
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
+    white-space: nowrap
 }
 
 .status-completed{
@@ -54,6 +55,7 @@
     margin-bottom: 15px;
     width: fit-content;
     margin-left: auto;
+    flex-wrap: wrap;
 }
 
 #search-and-btn .input-group .form-control{
@@ -88,4 +90,23 @@ th.sortable {
     font-weight: bold;
     cursor: pointer;
     text-decoration: underline;
+}
+
+@media (max-width: 780px){
+    #search-and-btn{
+        margin-left: 0 !important;
+    }
+
+    #search-and-btn *{
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 400px){
+    #search-and-btn .input-group{
+        width: 290px !important;
+    }
+    #search-and-btn .select-status{
+        width: 140px !important;
+    }
 }

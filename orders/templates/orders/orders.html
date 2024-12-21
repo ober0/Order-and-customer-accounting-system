@@ -22,22 +22,21 @@
         {% csrf_token %}
 
         <section id="search-and-btn">
-            <div style="width: 200px">
-                <select id="status" name="status" class="form-control">
-                    <option value="Pending">В ожидании</option>
-                    <option value="Completed">Завершен</option>
-                    <option value="Cancelled">Отменен</option>
-                </select>
-            </div>
             <div class="input-group" style="width: 400px">
                 <input type="text" class="form-control" placeholder="Поиск по словам" name="search" id="search" value="{{ search|escape }}">
                 <div class="input-group-append" style="display: block !important">
                      <button class="btn btn-primary " id="search-go" type="button">Искать</button>
                 </div>
             </div>
-            
+            <div class="select-status" style="width: 200px">
+                <select id="status" name="status" class="form-control">
+                    <option value="Pending">В ожидании</option>
+                    <option value="Completed">Завершен</option>
+                    <option value="Cancelled">Отменен</option>
+                </select>
+            </div>
             <div class="btns">
-                <a href="{% url 'add_order' %}" class="btn btn-primary">Добавить заказ</a>
+                <a style="width: 140px" href="{% url 'add_order' %}" class="btn btn-primary">Добавить заказ</a>
             </div>
         </section>
 

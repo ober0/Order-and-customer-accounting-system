@@ -102,6 +102,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (parentEl) {
                     parentEl.insertAdjacentHTML('beforeend', ordersHtml);
+
+                    const rows = parentEl.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        row.addEventListener('click', function () {
+                            const orderId = row.id;
+                            window.location.href = `/orders/${orderId}/`;
+                        });
+                    });
                 }
             })
             .catch((error) => {
