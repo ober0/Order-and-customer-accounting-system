@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 break;
                         }
 
-                        return `
+                        return ` 
                             <tr id="${order.id}">
                                 <td>${order.id}</td>
                                 <td>${order.product}</td>
@@ -122,6 +122,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         noMoreData = false;
         loadClients();
+    });
+
+    // Обработчик события для нажатия клавиши Enter в поле ввода поиска
+    document.getElementById('search').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {  // Если нажата клавиша Enter
+            const parentEl = document.querySelector('#orders-list');
+            if (parentEl) {
+                parentEl.innerHTML = '';
+            }
+
+            noMoreData = false;
+            loadClients();
+        }
     });
 
     document.getElementById('status').addEventListener('change', function () {
