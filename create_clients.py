@@ -11,7 +11,7 @@ from clients.models import Clients
 fake = Faker('ru_RU')
 
 def populate_clients():
-    for _ in range(10):
+    for _ in range(1000):
         is_male = random.choice([True, False])
 
         if is_male:
@@ -31,7 +31,7 @@ def populate_clients():
             middle_name=middle_name,
         )
 
-    print("10 клиентов успешно добавлены.")
+    print("1000 клиентов успешно добавлены.")
 
 if __name__ == '__main__':
     populate_clients()
