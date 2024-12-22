@@ -5,10 +5,9 @@
     <title>Edit Client</title>
 </head>
 <body>
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
+ {% include 'main/notifications.html' %}
     <div class="client">
+
         <h1>Редактирование клиента</h1>
         <form id="client-form">
             {% csrf_token %}

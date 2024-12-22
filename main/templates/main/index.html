@@ -5,6 +5,8 @@
     <title>Main page</title>
 </head>
 <body>
+ {% include 'main/notifications.html' %}
+
     {{ username }}
 
     <form action="/login/logout/" method="post">

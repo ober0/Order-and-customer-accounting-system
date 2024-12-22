@@ -30,6 +30,10 @@ def add_client(request):
         mobile_phone = request.POST.get('mobile_phone')
         email = request.POST.get('email')
 
+        client_with_this_email = Clients.objects.filter(email=email).first()
+
+        if client_with_this_email:
+            return JsonResponse({'success': False, 'error': 'Email already registered.', 'id': client_with_this_email.id})
 
         if not first_name or not last_name or not email:
             return JsonResponse({'error': 'Missing required fields'}, status=400)
@@ -43,8 +47,16 @@ def add_client(request):
                 email=email
             )
             client.save()
+            try:
+                messages.success(request, 'Клиент добавлен!')
+            except: pass
+
             return JsonResponse({'success': True, 'id':client.id})
         except Exception as e:
+            try:
+                messages.error(request, f'Ошибка: {str(e)}')
+            except: pass
+
             return JsonResponse({'success': False,'error': str(e)})
 
 @jwt_or_csrf_required
@@ -200,7 +212,7 @@ def add_order(request):
             )
             order.save()
             try:
-                messages.success(request, 'Успех')
+                messages.success(request, 'Заказ добавлен')
             except:
                 pass
             return JsonResponse({'success': True, 'id': order.id})

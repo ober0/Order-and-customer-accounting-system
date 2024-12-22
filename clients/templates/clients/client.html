@@ -5,9 +5,7 @@
     <title>Client #{{ client_id }}</title>
 </head>
 <body>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
+     {% include 'main/notifications.html' %}
 
     <div class="client">
         <div class="data"></div>

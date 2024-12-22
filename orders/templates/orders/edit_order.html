@@ -5,9 +5,7 @@
     <title>Edit Order</title>
 </head>
 <body>
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
+ {% include 'main/notifications.html' %}
     <div class="order">
         <h1>Редактирование заказа</h1>
         <form id="order-form">

@@ -17,13 +17,12 @@ function sendData(){
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
+                'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
             }
         })
         .then(response => response.json())
         .then(result => {
             window.location.href = `/orders/${result.id}/`;
-
         })
         .catch(error => {
             console.error('Ошибка при отправке данных:', error);
