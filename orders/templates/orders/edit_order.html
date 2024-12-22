@@ -73,8 +73,8 @@
                 <label for="status">Статус:</label>
                 <select id="status" style="border-radius: 5px" name="status" class="form-control">
                     <option value="Pending">В обработке</option>
-                    <option value="Completed">Выполнен</option>
-                    <option value="Cancelled">Завершен</option>
+                    <option value="Completed">Завершен</option>
+                    <option value="Cancelled">Отменен</option>
                 </select>
             </div>
             <button id="order-form-send" type="button" class="btn btn-primary">Сохранить изменения</button>
@@ -85,7 +85,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="{% url 'order/js/editOrder.js' %}">
+<script src="{% static 'orders/js/editOrder.js' %}">
 </script>
 
 </body>
