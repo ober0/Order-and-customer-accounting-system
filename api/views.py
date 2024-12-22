@@ -20,7 +20,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
-
+@csrf_exempt
 @jwt_or_csrf_required
 def add_client(request):
     if request.method == 'POST':
@@ -59,6 +59,7 @@ def add_client(request):
 
             return JsonResponse({'success': False,'error': str(e)})
 
+@csrf_exempt
 @jwt_or_csrf_required
 def get_client(request, id):
     if request.method == 'POST':
