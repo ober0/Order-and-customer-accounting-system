@@ -157,7 +157,7 @@ def edit_client(request, id):
             client.save()
 
             try:
-                messages.success(request, f'Успех')
+                messages.success(request, f'Клиент изменен')
             except:
                 pass
             return JsonResponse({
@@ -180,9 +180,8 @@ def delete_client(request, id):
     if request.method == 'DELETE':
         client = get_object_or_404(Clients, id=id)
         client.delete()
-        messages.success(request, 'Успешно')
         try:
-            messages.success(request, f'Успех')
+            messages.success(request, f'Клиент удален')
         except:
             pass
         return JsonResponse({'success': True})
@@ -262,7 +261,7 @@ def delete_order(request, id):
         order = get_object_or_404(Orders, id=id)
         order.delete()
         try:
-            messages.success(request, 'Успешно удалено!')
+            messages.success(request, 'Заказ удален!')
         except:
             pass
         return JsonResponse({'success': True})
@@ -354,7 +353,7 @@ def edit_order(request, id):
             order.save()
 
             try:
-                messages.success(request, f'Успех')
+                messages.success(request, f'Заказ изменен!')
             except:
                 pass
 
@@ -408,7 +407,7 @@ def add_report(request):
             )
             report.save()
             try:
-                messages.success(request, f'Успешно!')
+                messages.success(request, f'Отчет создан')
             except:
                 pass
             return JsonResponse({'success': True, 'id': report.id})

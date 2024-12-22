@@ -3,11 +3,11 @@
 <header>
 <nav class="navbar navbar-expand-xl navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand " href="">
+    <a class="navbar-brand" href="">
       <img src="{% static 'main/img/logo.png' %}" alt="LOGO" height="60">
     </a>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -23,35 +23,36 @@
         </li>
         {% if isAdmin %}
           <li class="nav-item">
-          <a  class="nav-link" href="/login/new/">Новый работник</a>
-        </li>
-          {% endif %}
+            <a class="nav-link" href="/login/new/">Новый работник</a>
+          </li>
+        {% endif %}
       </ul>
       <!-- Кнопки справа -->
-        <hr>
+      <hr>
       <ul class="navbar-nav" style="align-items: center">
-          <li>
-              <a id="exit-btn" class="nav-link" href="">Выйти</a>
-          </li>
-
-        <li class="nav-item user-logo">
-          <img style="margin-bottom: 0" width="45" src="{% static 'main/img/user.png' %}" class="nav-link">
+        <li>
+          <a id="exit-btn" class="nav-link" style="margin-right: 10px; cursor: pointer">Выйти</a>
         </li>
+        <li class="nav-item user-logo d-flex">
+            <p class="nav-link" style="align-self: center; margin-bottom: 0; white-space: nowrap;">{{ name }}</p>
+          <img style="margin-bottom: 0" width="45" src="{% static 'main/img/user.png' %}" class="nav-link">
 
+        </li>
       </ul>
     </div>
-
-
   </div>
 </nav>
-    <script>
-        document.getElementById('exit-btn').addEventListener('click', function () {
-            fetch('/login/logout/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFtoken': '{{ csrf_token }}'
-                }
-            })
-        })
-    </script>
+<script>
+  document.getElementById('exit-btn').addEventListener('click', function () {
+    fetch('/login/logout/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFtoken': '{{ csrf_token }}'
+      }
+    })
+        .then(response => response.json(
+            window.location.reload()
+        ))
+  })
+</script>
 </header>
