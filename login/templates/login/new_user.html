@@ -1,79 +1,134 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>new user</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать нового пользователя</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'orders/css/orders.css' %}">
     <style>
-        /* Стили для подсветки пустых полей */
         .error {
             border: 2px solid red;
             background-color: #ffe6e6;
         }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+        }
+        #responseMessage {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    {% for message in messages %}
-        {{ message }}
-    {% endfor %}
 
-    <form id="userForm" method="post">
-        {% csrf_token %}
-        <input type="text" name="first_name" id="first_name" placeholder="Имя" required>
-        <input type="text" name="last_name" id="last_name" placeholder="Фамилия">
-        <input type="email" name="email" id="email" placeholder="Email" required>
-        <input type="text" name="username" id="username" placeholder="логин" required   >
-        <input type="radio" name="staff" id="staff">
-        <input type="password" name="password" id="password" placeholder="Пароль" required>
-        <input type="button" id="submit" value="Создать">
-    </form>
+{% include 'main/header.html' %}
 
-    <div id="responseMessage"></div>
+<main class="container mt-4">
+    {% include 'main/notifications.html' %}
 
-    <script>
-        document.querySelector('#submit').addEventListener('click', function () {
-            const form = document.getElementById('userForm');
-            const inputs = form.querySelectorAll('input[required]');
-            let isValid = true;
+    <div class="form-container">
+        <h2 class="text-center mb-4">Создание нового пользователя</h2>
 
-            // Убираем старые ошибки
-            inputs.forEach(input => input.classList.remove('error'));
+        <form id="userForm" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="first_name">Имя <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Имя" required>
+                <div class="invalid-feedback">Пожалуйста, укажите имя.</div>
+            </div>
 
-            // Проверяем каждое поле с required
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    input.classList.add('error'); // Добавляем красное обрамление
-                    isValid = false;
-                }
-            });
+            <div class="form-group">
+                <label for="last_name">Фамилия <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Фамилия" required>
+                <div class="invalid-feedback">Пожалуйста, укажите фамилию.</div>
+            </div>
 
-            // Если форма не прошла валидацию, выводим сообщение и останавливаем отправку
-            if (!isValid) {
-                document.getElementById('responseMessage').innerHTML =
-                    '<p style="color: red;">Пожалуйста, заполните все обязательные поля.</p>';
-                return;
+            <div class="form-group">
+                <label for="email">Email <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                <div class="invalid-feedback">Пожалуйста, укажите корректный email.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Логин <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Логин" required>
+                <div class="invalid-feedback">Пожалуйста, укажите логин.</div>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" name="staff" id="staff">
+                <label class="form-check-label" for="staff">Администратор</label>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Пароль" required>
+                <div class="invalid-feedback">Пожалуйста, укажите пароль.</div>
+            </div>
+
+            <button type="button" id="submit" class="btn btn-primary btn-block">Создать пользователя</button>
+        </form>
+
+        <div id="responseMessage"></div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.querySelector('#submit').addEventListener('click', function () {
+        const form = document.getElementById('userForm');
+        const inputs = form.querySelectorAll('input[required]');
+        let isValid = true;
+
+        // Убираем старые ошибки
+        inputs.forEach(input => input.classList.remove('error'));
+
+        // Проверяем каждое поле с required
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.classList.add('error'); // Добавляем красное обрамление
+                isValid = false;
             }
-
-            // Собираем данные и отправляем запрос
-            const formData = new FormData(form);
-
-            fetch('', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('responseMessage').innerHTML =
-                    `<p style="color: green;">${data.message || 'Пользователь создан успешно!'}</p>`;
-                form.reset(); // Очищаем форму после успешного ответа
-            })
-            .catch(error => {
-                document.getElementById('responseMessage').innerHTML =
-                    `<p style="color: red;">Произошла ошибка: ${error.message}</p>`;
-            });
         });
-    </script>
+
+        // Если форма не прошла валидацию, выводим сообщение и останавливаем отправку
+        if (!isValid) {
+            document.getElementById('responseMessage').innerHTML =
+                '<div class="alert alert-danger">Пожалуйста, заполните все обязательные поля.</div>';
+            return;
+        }
+
+        // Собираем данные и отправляем запрос
+        const formData = new FormData(form);
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.reload()
+        })
+        .catch(error => {
+            document.getElementById('responseMessage').innerHTML =
+                `<div class="alert alert-danger">Произошла ошибка: ${error.message}</div>`;
+        });
+    });
+</script>
+
 </body>
 </html>
