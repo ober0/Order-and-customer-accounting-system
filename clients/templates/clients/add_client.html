@@ -41,7 +41,11 @@
             .then(response => response.json())
             .then(result => {
                 if (result.id) {
+                    {% if next %}
+                        window.location.href = `{{ next }}?client_select=${result.id}`
+                    {% else %}
                     window.location.href = `/clients/${result.id}/`;
+                    {% endif %}
                 } else {
                     alert('Ошибка при создании клиента');
                 }

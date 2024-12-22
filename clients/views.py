@@ -35,4 +35,7 @@ def add_client(request):
     context = {'client_id': id}
     context = addUserData(request, context)
 
+    next = request.GET.get('next', None)
+    if next:
+        context['next'] = next
     return render(request, 'clients/add_client.html', context)

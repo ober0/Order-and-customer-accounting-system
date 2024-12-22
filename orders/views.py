@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
+
+from clients.models import Clients
 from main.functions import addUserData
 from orders.models import Orders
 from main.decorators import login_required_custom
@@ -37,6 +39,12 @@ def edit_order(request, id):
 def add_order(request):
     context = {}
     context = addUserData(request, context)
+
+    client_select = request.GET.get('client_select')
+    if client_select:
+        context['client_select'] = client_select
+        client = get_object_or_404(Clients, id=int(client_select))
+        context['client_select_text'] = client.get_full_name()
 
 
     return render(request, 'orders/add_order.html', context)

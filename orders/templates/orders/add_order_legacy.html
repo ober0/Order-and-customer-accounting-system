@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+    <input type="text" name="client" id="client" value="2" >
+    <input type="text" name="product" id="product" placeholder="Продукт">
+    <input type="text" name="quantity" id="quantity" placeholder="Кол-во">
+    <input type="text" name="price" id="price" placeholder="Цена\шт">
+    <input type="text" name="description" id="description" placeholder="Описание">
+    <input type="button" value="Создать" id="create-order-btn">
+
+    <script>
+        document.getElementById('create-order-btn').addEventListener('click', function () {
+            const client = document.getElementById('client').value;
+            const product = document.getElementById('product').value;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value;
+
+            // Создаем FormData для отправки данных
+            const formData = new FormData();
+            formData.append('client', client);
+            formData.append('product', product);
+            formData.append('quantity', quantity);
+            formData.append('price', price);
+            formData.append('description', description);
+
+            fetch('/api/orders/add/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                window.location.href = `/orders/${result.id}/`;
+
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке данных:', error);
+            });
+        });
+    </script>
+</body>
+</html>
