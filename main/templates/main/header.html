@@ -34,7 +34,7 @@
           <a id="exit-btn" class="nav-link" style="margin-right: 10px; cursor: pointer">Выйти</a>
         </li>
         <li class="nav-item user-logo d-flex">
-            <p class="nav-link" style="align-self: center; margin-bottom: 0; white-space: nowrap;">{{ name }}</p>
+            <p class="nav-link" style="align-self: center; margin-bottom: 0; white-space: nowrap;">{{ name|escape }}</p>
           <img style="margin-bottom: 0" width="45" src="{% static 'main/img/user.png' %}" class="nav-link">
 
         </li>

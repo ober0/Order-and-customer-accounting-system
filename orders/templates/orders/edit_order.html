@@ -14,7 +14,8 @@
 
 <main class="container mt-4">
     {% include 'main/notifications.html' %}
-
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order_id|escape }}">
     <div class="order">
         <h1>Редактирование заказа</h1>
         <form id="order-form">
@@ -84,63 +85,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    // Функция для обновления итоговой цены
-    function updateTotalPrice() {
-        const price = parseFloat(document.getElementById('price').value) || 0;
-        const quantity = parseInt(document.getElementById('quantity').value) || 0;
-        const totalPrice = price * quantity;
-        document.getElementById('total_price').value = totalPrice.toFixed(2);
-    }
-
-    // Получаем данные заказа при загрузке страницы
-    fetch('/api/orders/get/{{ order_id }}/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-    })
-    .then(response => response.json())
-    .then(result => {
-        let fullName = result.client.client.full_name.split(' ')
-        document.getElementById('client_last_name').value = fullName[0] || '';
-        document.getElementById('client_first_name').value = fullName[1] || '';
-        document.getElementById('client_middle_name').value = fullName[2] || '';
-
-        document.getElementById('client_email').value = result.client.client.email;
-        document.getElementById('client_phone').value = result.client.client.mobile_phone;
-        document.getElementById('product').value = result.client.product;
-        document.getElementById('quantity').value = result.client.quantity;
-        document.getElementById('price').value = result.client.price;
-        document.getElementById('total_price').value = result.client.total_price;
-        document.getElementById('description').value = result.client.description;
-        document.getElementById('status').value = result.client.status;
-    })
-    .catch(error => console.error('Ошибка при загрузке данных:', error));
-
-    // Отправка формы и редирект на страницу /orders/ после успешного обновления
-    document.getElementById('order-form-send').addEventListener('click', function () {
-        // Получаем данные из формы
-        const formData = new FormData(document.getElementById('order-form'));
-
-        // Отправляем данные на сервер
-        fetch('/api/orders/edit/{{ order_id }}/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success){
-                window.location.href = `/orders/${result.id}/`;
-            } else {
-                alert('Ошибка при сохранении заказа');
-            }
-        })
-        .catch(error => console.error('Ошибка при сохранении:', error));
-    });
+<script src="{% url 'order/js/editOrder.js' %}">
 </script>
 
 </body>

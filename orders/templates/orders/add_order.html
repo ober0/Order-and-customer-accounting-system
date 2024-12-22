@@ -24,8 +24,8 @@
         <div class="form-group">
             <label for="client">Клиент <span class="text-danger">*</span></label>
             <div class="client-flex-div">
-                <input type="hidden" class="form-control" name="client" id="client" value="{{ client_select }}" required>
-                <input type="text" class="form-control" id="client-name" placeholder="Клиент не выбран" value="{{ client_select_text }}" style="pointer-events: none;">
+                <input type="hidden" class="form-control" name="client" id="client" value="{{ client_select|escape }}" required>
+                <input type="text" class="form-control" id="client-name" placeholder="Клиент не выбран" value="{{ client_select_text|escape }}" style="pointer-events: none;">
 
                 <button type="button" id="add-new-client-btn" class="btn btn-secondary" style="white-space: nowrap;">Добавить нового</button>
                 <button type="button" id="select-existing-client-btn" class="btn btn-secondary" style="white-space: nowrap;">Выбрать существующего</button>

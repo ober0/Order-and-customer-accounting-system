@@ -23,7 +23,7 @@
 
         <section id="search-and-btn">
             <a href="{% url 'orders' %}" class="btn btn-outline-primary">Очистить фильтры</a>
-            <input type="hidden" name="client_id" id="client_id" value="{{ client_id }}">
+            <input type="hidden" name="client_id" id="client_id" value="{{ client_id|escape }}">
             <div class="input-group" style="width: 400px">
                 <input type="text" class="form-control" placeholder="Поиск по словам" name="search" id="search" value="{{ search|escape }}">
                 <div class="input-group-append" style="display: block !important">

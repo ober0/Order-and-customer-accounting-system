@@ -85,49 +85,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    document.querySelector('#submit').addEventListener('click', function () {
-        const form = document.getElementById('userForm');
-        const inputs = form.querySelectorAll('input[required]');
-        let isValid = true;
-
-        // Убираем старые ошибки
-        inputs.forEach(input => input.classList.remove('error'));
-
-        // Проверяем каждое поле с required
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                input.classList.add('error'); // Добавляем красное обрамление
-                isValid = false;
-            }
-        });
-
-        // Если форма не прошла валидацию, выводим сообщение и останавливаем отправку
-        if (!isValid) {
-            document.getElementById('responseMessage').innerHTML =
-                '<div class="alert alert-danger">Пожалуйста, заполните все обязательные поля.</div>';
-            return;
-        }
-
-        // Собираем данные и отправляем запрос
-        const formData = new FormData(form);
-
-        fetch('', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            window.location.reload()
-        })
-        .catch(error => {
-            document.getElementById('responseMessage').innerHTML =
-                `<div class="alert alert-danger">Произошла ошибка: ${error.message}</div>`;
-        });
-    });
+<script src="{% url 'login/js/login.js' %}">
 </script>
 
 </body>

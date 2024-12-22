@@ -48,7 +48,7 @@
                 <input type="password" name="password" id="password" class="form-control {% if error %}error{% endif %}" placeholder="Пароль" required>
             </div>
 
-            <input type="hidden" name="next" value="{{ next }}">
+            <input type="hidden" name="next" value="{{ next|escape }}">
 
             <button type="submit" class="btn btn-primary btn-block">Войти</button>
         </form>

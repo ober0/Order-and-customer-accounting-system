@@ -7,7 +7,7 @@
 <body>
  {% include 'main/notifications.html' %}
 
-    {{ username }}
+    {{ username|escape }}
 
     <form action="/login/logout/" method="post">
         {% csrf_token %}

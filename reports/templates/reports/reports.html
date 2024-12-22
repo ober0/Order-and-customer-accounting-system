@@ -19,7 +19,7 @@
 <main class="container mt-4">
     {% include 'main/notifications.html' %}
     <h1 class="mb-4">Все отчеты</h1>
-
+    {% csrf_token %}
     <!-- Форма для выбора периода -->
     <div class="create-report-container mb-4">
 
@@ -41,90 +41,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    // Функция для получения всех отчетов
-    function fetchReports() {
-        fetch('/api/reports/get/')
-            .then(response => response.json())
-            .then(data => {
-                const reportListContainer = document.getElementById('reportList');
-                reportListContainer.innerHTML = ''; // Очищаем контейнер
-
-                data.reports.forEach(report => {
-                    const reportItem = document.createElement('div');
-                    reportItem.classList.add('report-item', 'mb-3', 'p-3', 'border', 'rounded');
-
-                    let period_ru = 'месяц'
-                    switch (report.period){
-                        case 'week':
-                            period_ru = 'неделю'
-                            break
-                        case 'month':
-                            period_ru = 'месяц'
-                            break
-                        case 'year':
-                            period_ru = 'год'
-                            break
-                    }
-
-                    reportItem.innerHTML = `
-                        <h3>Отчет за ${period_ru}</h3>
-                        <p><strong>Дата создания:</strong> ${report.date_created}</p>
-                        <button class="btn btn-success" onclick="downloadReport(${report.id})">Скачать файл</button>
-                    `;
-                    reportListContainer.appendChild(reportItem);
-                });
-            })
-            .catch(error => {
-                console.error('Ошибка при загрузке отчетов:', error);
-            });
-    }
-
-    // Функция для создания отчета
-    function createReport() {
-        const period = document.getElementById('reportPeriod').value;
-        let formData = new FormData();
-        formData.append('period', period);
-
-        fetch('/api/reports/new/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFtoken': '{{ csrf_token }}',
-            },
-            body: formData
-        })
-        .then(response => {
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-        });
-    }
-
-    // Функция для скачивания отчета
-    function downloadReport(reportId) {
-        fetch(`/api/reports/get/${reportId}/`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `report_${reportId}.txt`;
-            link.click();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-        });
-    }
-
-    // Загружаем отчеты при загрузке страницы
-    window.onload = fetchReports;
+<script src="{% url 'reports/js/reports/js' %}">
 </script>
 
 </body>

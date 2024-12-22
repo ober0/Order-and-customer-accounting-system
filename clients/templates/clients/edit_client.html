@@ -14,7 +14,8 @@
 
 <main class="container mt-4">
     {% include 'main/notifications.html' %}
-
+    {% csrf_token %}
+    <input type="hidden" name="client_id" value="{{ client_id|escape }}">
     <div class="client">
         <h1>Редактирование клиента</h1>
         <form id="client-form">
@@ -48,53 +49,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    // Получаем данные клиента при загрузке страницы
-    fetch('/api/clients/get/{{ client_id }}/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.error('Ошибка HTTP:', response.status);
-            throw new Error('Ошибка при запросе данных');
-        }
-        return response.json();
-    })
-    .then(result => {
-        const client = result.client;
-        document.getElementById('first_name').value = client.first_name || '';
-        document.getElementById('middle_name').value = client.middle_name || '';
-        document.getElementById('last_name').value = client.last_name || '';
-        document.getElementById('email').value = client.email || '';
-        document.getElementById('mobile_phone').value = client.mobile_phone || '';
-    })
-    .catch(error => console.error('Ошибка при загрузке данных:', error));
-
-    // Отправка формы и редирект на страницу клиента после успешного обновления
-    document.getElementById('client-form-send').addEventListener('click', function () {
-        const formData = new FormData(document.getElementById('client-form'));
-
-        // Отправляем данные на сервер
-        fetch('/api/clients/edit/{{ client_id }}/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                window.location.href = `/clients/${result.id}/`;
-            } else {
-                alert('Ошибка при сохранении данных клиента');
-            }
-        })
-        .catch(error => console.error('Ошибка при обновлении данных:', error));
-    });
+<script src="{% static 'clients/js/editClient.js' %}">
 </script>
 
 </body>
