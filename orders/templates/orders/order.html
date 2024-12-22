@@ -1,74 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order #{{ order_id }}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'orders/css/orders.css' %}">
 </head>
 <body>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
+
+{% include 'main/header.html' %}
+{% csrf_token %}
+<input type="hidden" name="order_id" value="{{ order_id }}">
+<main class="container mt-4">
+    {% include 'main/notifications.html' %}
 
     <div class="order">
-        <div class="data"></div>
-        <div class="buttons">
-            <a href="/orders/{{ order_id }}/edit/">Изменить</a>
-            <input id="delete-btn" type="button" value="Удалить">
+        <div class="data">
+            <!-- Данные заказа будут загружены сюда -->
+        </div>
+        <div class="buttons mt-4">
+            <a href="/orders/{{ order_id|escape }}/edit/" class="btn btn-primary">Изменить</a>
+            <input id="delete-btn" type="button" value="Удалить" class="btn btn-danger">
         </div>
     </div>
-</body>
+</main>
 
-<script>
-    // Получение данных заказа
-    fetch('/api/orders/get/{{ order_id }}/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.client) {
-            const order = result.client;
-            document.querySelector('.data').innerHTML = `
-                <div class="order-details">
-                    <h2>Детали заказа #${order.id}</h2>
-                    <p><strong>Продукт:</strong> ${order.product}</p>
-                    <p><strong>Количество:</strong> ${order.quantity} шт</p>
-                    <p><strong>Цена за единицу:</strong> ${order.price} руб</p>
-                    <p><strong>Общая стоимость:</strong> ${order.total_price} руб</p>
-                    <p><strong>Описание:</strong> ${order.description}</p>
-                    <p><strong>Статус:</strong> ${order.status}</p>
-                    <p><strong>Создан:</strong> ${order.created_at}</p>
-                    <h3>Информация о <a href="/clients/${order.client.id}">клиенте</a></h3>
-                    <p><strong>Имя:</strong> ${order.client.full_name}</p>
-                    <p><strong>Email:</strong> ${order.client.email}</p>
-                    <p><strong>Телефон:</strong> ${order.client.mobile_phone}</p>
-                </div>
-            `;
-        } else {
-            document.querySelector('.data').innerHTML = '<p>Заказ не найден.</p>';
-        }
-    })
-    .catch(error => console.error('Ошибка:', error));
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    // Удаление заказа
-    document.getElementById('delete-btn').addEventListener('click', function () {
-        fetch('/api/orders/delete/{{ order_id }}/', {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                window.location.href = '/orders/';
-            } else {
-                alert('Ошибка при удалении заказа');
-            }
-        })
-        .catch(error => console.error('Ошибка:', error));
-    });
+<script src="{% static 'orders/js/order.js' %}">
 </script>
+
+</body>
 </html>

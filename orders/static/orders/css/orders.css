@@ -66,6 +66,10 @@
 #search-and-btn .input-group .input-group-append .btn {
  border-top-right-radius: 20px;
  border-bottom-right-radius: 20px;
+     border-top-left-radius: 0px !important;
+     border-bottom-left-radius: 0px !important;
+     border-top-right-radius: 20px;
+     border-bottom-right-radius: 20px;
 }
 
 #search-and-btn .btns *, #status{
@@ -92,6 +96,20 @@ th.sortable {
     text-decoration: underline;
 }
 
+.client-flex-div{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.btn{
+    border-radius: 20px !important;
+}
+
+.custom-modal-width {
+    max-width: 60%;
+}
+
 @media (max-width: 780px){
     #search-and-btn{
         margin-left: 0 !important;
@@ -108,5 +126,29 @@ th.sortable {
     }
     #search-and-btn .select-status{
         width: 140px !important;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .client-flex-div{
+        flex-wrap: wrap-reverse;
+    }
+}
+
+@media (max-width: 1500px) {
+    .custom-modal-width {
+        max-width: 70%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .custom-modal-width {
+        max-width: 80%;
+    }
+}
+@media (max-width: 576px) {
+    .custom-modal-width {
+        max-width: 100%;
     }
 }

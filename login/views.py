@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from clients.models import Clients
 from api.decorators import jwt_or_csrf_required
 from main.decorators import login_required_custom
+from main.functions import addUserData
+
 
 def login(request):
     if request.method == 'GET':
@@ -59,7 +61,10 @@ def new_user(request):
                 messages.error(request, str(e))
                 return JsonResponse({'success': False})
         elif request.method == 'GET':
-            return render(request, 'login/new_user.html')
+            context = {}
+            context = addUserData(request, context)
+
+            return render(request, 'login/new_user.html', context)
     messages.error(request, 'Недостаточно прав')
     return redirect('main')
 

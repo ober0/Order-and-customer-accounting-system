@@ -1,52 +1,110 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить Заказ</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'orders/css/orders.css' %}">
+
 </head>
 <body>
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
-    <input type="text" name="client" id="client" value="2" >
-    <input type="text" name="product" id="product" placeholder="Продукт">
-    <input type="text" name="quantity" id="quantity" placeholder="Кол-во">
-    <input type="text" name="price" id="price" placeholder="Цена\шт">
-    <input type="text" name="description" id="description" placeholder="Описание">
-    <input type="button" value="Создать" id="create-order-btn">
 
-    <script>
-        document.getElementById('create-order-btn').addEventListener('click', function () {
-            const client = document.getElementById('client').value;
-            const product = document.getElementById('product').value;
-            const quantity = document.getElementById('quantity').value;
-            const price = document.getElementById('price').value;
-            const description = document.getElementById('description').value;
+{% include 'main/header.html' %}
 
-            // Создаем FormData для отправки данных
-            const formData = new FormData();
-            formData.append('client', client);
-            formData.append('product', product);
-            formData.append('quantity', quantity);
-            formData.append('price', price);
-            formData.append('description', description);
+<main class="container mt-4">
+    <h1 class="text-center mb-4">Добавить Заказ</h1>
 
-            fetch('/api/orders/add/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                }
-            })
-            .then(response => response.json())
-            .then(result => {
-                window.location.href = `/orders/${result.id}/`;
+    {% include 'main/notifications.html' %}
 
-            })
-            .catch(error => {
-                console.error('Ошибка при отправке данных:', error);
-            });
-        });
-    </script>
+    <form id="create-order-form" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="client">Клиент <span class="text-danger">*</span></label>
+            <div class="client-flex-div">
+                <input type="hidden" class="form-control" name="client" id="client" value="{{ client_select|escape }}" required>
+                <input type="text" class="form-control" id="client-name" placeholder="Клиент не выбран" value="{{ client_select_text|escape }}" style="pointer-events: none;">
+
+                <button type="button" id="add-new-client-btn" class="btn btn-secondary" style="white-space: nowrap;">Добавить нового</button>
+                <button type="button" id="select-existing-client-btn" class="btn btn-secondary" style="white-space: nowrap;">Выбрать существующего</button>
+            </div>
+            <div class="invalid-feedback">Пожалуйста, выберите клиента.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="product">Продукт <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="product" id="product" placeholder="Введите наименование продукта" required>
+            <div class="invalid-feedback">Пожалуйста, укажите продукт.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Количество <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="quantity" id="quantity" placeholder="Введите количество" required>
+            <div class="invalid-feedback">Пожалуйста, укажите количество.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Цена за единицу <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="price" id="price" placeholder="Введите цену за единицу" step="0.01" required>
+            <div class="invalid-feedback">Пожалуйста, укажите цену.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Введите описание"></textarea>
+        </div>
+
+        <button type="button" id="create-order-btn" class="btn btn-primary btn-block">Создать Заказ</button>
+    </form>
+
+    <!-- Modal for selecting an existing client -->
+    <div class="modal fade" id="selectClientModal" tabindex="-1" aria-labelledby="selectClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectClientModalLabel">Выбрать клиента</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" id="client-search" class="form-control" placeholder="Поиск клиента">
+                    </div>
+                    <div class="table-responsive" id="table" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Имя</th>
+                                    <th>Фамилия</th>
+                                    <th>Отчество</th>
+                                    <th>Телефон</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody id="client-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'orders/js/addOrder.js' %}"></script>
+
 </body>
 </html>

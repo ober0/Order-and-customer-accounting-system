@@ -1,127 +1,48 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отчеты</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .report-list {
-            margin-bottom: 20px;
-        }
-        .report-item {
-            margin-bottom: 10px;
-        }
-        .download-button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .download-button:hover {
-            background-color: #45a049;
-        }
-        .create-report-container {
-            margin-bottom: 20px;
-        }
-        .create-report-container select {
-            padding: 10px;
-            margin-right: 10px;
+        .btn, select{
+            border-radius: 20px !important;
         }
     </style>
 </head>
 <body>
 
-    <h1>Все отчеты</h1>
+{% include 'main/header.html' %}
 
+<main class="container mt-4">
+    {% include 'main/notifications.html' %}
+    <h1 class="mb-4">Все отчеты</h1>
+    {% csrf_token %}
     <!-- Форма для выбора периода -->
-    <div class="create-report-container">
-        <label for="reportPeriod">Выберите период: </label>
-        <select id="reportPeriod">
-            <option value="week">Неделя</option>
-            <option value="month">Месяц</option>
-            <option value="year">Год</option>
-        </select>
-        <button class="download-button" onclick="createReport()">Создать отчет</button>
+    <div class="create-report-container mb-4">
+
+        <div class="d-flex" style="gap:10px; flex-wrap: wrap">
+            <label style="margin-bottom: 0; align-self: center" for="reportPeriod" class="">Выберите период: </label>
+            <select id="reportPeriod" class="form-control" style="width: auto;">
+                <option value="week">Неделя</option>
+                <option value="month">Месяц</option>
+                <option value="year">Год</option>
+            </select>
+            <button class="btn btn-primary" onclick="createReport()">Создать отчет</button>
+        </div>
     </div>
 
     <div class="report-list" id="reportList"></div>
 
-    <script>
-        // Функция для получения всех отчетов
-        function fetchReports() {
-            fetch('/api/reports/get/')
-                .then(response => response.json())
-                .then(data => {
-                    const reportListContainer = document.getElementById('reportList');
-                    reportListContainer.innerHTML = ''; // Очищаем контейнер
+</main>
 
-                    data.reports.forEach(report => {
-                        const reportItem = document.createElement('div');
-                        reportItem.classList.add('report-item');
-                        reportItem.innerHTML = `
-                            <h3>Отчет за ${report.period}</h3>
-                            <p>Дата создания: ${report.date_created}</p>
-                            <button class="download-button" onclick="downloadReport(${report.id})">Скачать файл</button>
-                        `;
-                        reportListContainer.appendChild(reportItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Ошибка при загрузке отчетов:', error);
-                });
-        }
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Функция для создания отчета
-        function createReport() {
-            const period = document.getElementById('reportPeriod').value;
-            let formData = new FormData()
-            formData.append('period', period)
-
-            fetch('/api/reports/new/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFtoken': '{{ csrf_token }}',
-                },
-                body: formData
-            })
-            .then(response => {
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-            });
-        }
-
-        // Функция для скачивания отчета
-        function downloadReport(reportId) {
-            fetch(`/api/reports/get/${reportId}/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `report_${reportId}.txt`;
-                link.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-            });
-        }
-
-        // Загружаем отчеты при загрузке страницы
-        window.onload = fetchReports;
-    </script>
+<script src="{% static 'reports/js/reports.js' %}">
+</script>
 
 </body>
 </html>

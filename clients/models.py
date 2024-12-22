@@ -19,5 +19,5 @@ class Clients(models.Model):
 
     def get_full_name(self):
         if self.middle_name:
-            return f'{self.first_name} {self.middle_name} {self.last_name}'
-        return f'{self.first_name} {self.last_name}'
+            return f'{self.last_name} {self.first_name} {self.middle_name} '
+        return f'{self.last_name} {self.first_name}'

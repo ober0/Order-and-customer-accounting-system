@@ -3,11 +3,12 @@ import re
 from datetime import timedelta
 
 import pytz
+from django.db.models.functions import Concat
 from reportlab.lib import fonts
 
 from reports.models import Report
 from django.contrib import messages
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, F, Value
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -29,6 +30,10 @@ def add_client(request):
         mobile_phone = request.POST.get('mobile_phone')
         email = request.POST.get('email')
 
+        client_with_this_email = Clients.objects.filter(email=email).first()
+
+        if client_with_this_email:
+            return JsonResponse({'success': False, 'error': 'Email already registered.', 'id': client_with_this_email.id})
 
         if not first_name or not last_name or not email:
             return JsonResponse({'error': 'Missing required fields'}, status=400)
@@ -42,8 +47,16 @@ def add_client(request):
                 email=email
             )
             client.save()
+            try:
+                messages.success(request, 'Клиент добавлен!')
+            except: pass
+
             return JsonResponse({'success': True, 'id':client.id})
         except Exception as e:
+            try:
+                messages.error(request, f'Ошибка: {str(e)}')
+            except: pass
+
             return JsonResponse({'success': False,'error': str(e)})
 
 @jwt_or_csrf_required
@@ -62,7 +75,6 @@ def get_client(request, id):
         return JsonResponse({'client': client_data})
 
 
-
 @csrf_exempt
 @jwt_or_csrf_required
 def get_all_clients(request):
@@ -76,21 +88,32 @@ def get_all_clients(request):
             search_filter = request.POST.get('search', '')
             search_filter_escape = re.escape(search_filter)
 
+            # Аннотируем модель, добавляя поле full_name
+            clients_query = Clients.objects.annotate(
+                full_name=Concat(
+                    F('last_name'),   Value(' '), F('first_name'), Value(' '), F('middle_name')
+                ),
+                reverse_full_name=Concat(
+                     F('first_name'), Value(' '), F('last_name'),  Value(' '), F('middle_name')
+                )
+            )
+
+            # Фильтруем по аннотированному полю full_name
             query = (
-                    Q(first_name__iregex=search_filter_escape) |
-                    Q(last_name__iregex=search_filter_escape) |
-                    Q(middle_name__iregex=search_filter_escape) |
-                    Q(email__iregex=search_filter_escape) |
-                    Q(mobile_phone__iregex=search_filter_escape)
+                Q(first_name__iregex=search_filter_escape) |
+                Q(last_name__iregex=search_filter_escape) |
+                Q(middle_name__iregex=search_filter_escape) |
+                Q(email__iregex=search_filter_escape) |
+                Q(mobile_phone__iregex=search_filter_escape) |
+                Q(full_name__iregex=search_filter_escape) |
+                Q(reverse_full_name__iregex=search_filter_escape)
             )
             order_by = request.POST.get('order_by', 'id')
 
-            clients = Clients.objects.filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
-
+            clients = clients_query.filter(query).order_by(order_by)[start_id:start_id+20]
 
             if not clients.exists():
                 return JsonResponse({'clients': [], 'message': 'No clients found'}, status=200)
-
 
             clients_data = [
                 {
@@ -110,6 +133,7 @@ def get_all_clients(request):
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 
 @csrf_exempt
 @jwt_or_csrf_required
@@ -133,7 +157,7 @@ def edit_client(request, id):
             client.save()
 
             try:
-                messages.success(request, f'Успех')
+                messages.success(request, f'Клиент изменен')
             except:
                 pass
             return JsonResponse({
@@ -156,9 +180,8 @@ def delete_client(request, id):
     if request.method == 'DELETE':
         client = get_object_or_404(Clients, id=id)
         client.delete()
-        messages.success(request, 'Успешно')
         try:
-            messages.success(request, f'Успех')
+            messages.success(request, f'Клиент удален')
         except:
             pass
         return JsonResponse({'success': True})
@@ -188,7 +211,7 @@ def add_order(request):
             )
             order.save()
             try:
-                messages.success(request, 'Успех')
+                messages.success(request, 'Заказ добавлен')
             except:
                 pass
             return JsonResponse({'success': True, 'id': order.id})
@@ -238,7 +261,7 @@ def delete_order(request, id):
         order = get_object_or_404(Orders, id=id)
         order.delete()
         try:
-            messages.success(request, 'Успешно удалено!')
+            messages.success(request, 'Заказ удален!')
         except:
             pass
         return JsonResponse({'success': True})
@@ -270,7 +293,7 @@ def get_all_orders(request):
                 query &= Q(client__id=client)
             order_by = request.POST.get('order_by', 'id')
 
-            orders = Orders.objects.filter(status=status).filter(query).filter(id__gte=start_id).order_by(order_by)[:20]
+            orders = Orders.objects.filter(status=status).filter(query).order_by(order_by)[start_id:start_id+20]
             clients = [order.client for order in orders]
 
             if not orders.exists():
@@ -330,7 +353,7 @@ def edit_order(request, id):
             order.save()
 
             try:
-                messages.success(request, f'Успех')
+                messages.success(request, f'Заказ изменен!')
             except:
                 pass
 
@@ -384,7 +407,7 @@ def add_report(request):
             )
             report.save()
             try:
-                messages.success(request, f'Успешно!')
+                messages.success(request, f'Отчет создан')
             except:
                 pass
             return JsonResponse({'success': True, 'id': report.id})
