@@ -64,8 +64,10 @@
 }
 
 #search-and-btn .input-group .input-group-append .btn {
- border-top-right-radius: 20px;
- border-bottom-right-radius: 20px;
+     border-top-left-radius: 0px !important;
+     border-bottom-left-radius: 0px !important;
+     border-top-right-radius: 20px;
+     border-bottom-right-radius: 20px;
 }
 
 #search-and-btn .btns *, #status{
