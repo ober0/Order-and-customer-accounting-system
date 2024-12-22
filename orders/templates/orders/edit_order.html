@@ -1,121 +1,147 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Order</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'orders/css/orders.css' %}">
 </head>
 <body>
- {% include 'main/notifications.html' %}
+
+{% include 'main/header.html' %}
+
+<main class="container mt-4">
+    {% include 'main/notifications.html' %}
+
     <div class="order">
         <h1>Редактирование заказа</h1>
         <form id="order-form">
             {% csrf_token %}
-            <div>
-                <label for="client_full_name">Полное имя клиента:</label>
-                <input type="text" id="client_full_name" value="" disabled>
+            <div class="form-group">
+                <label for="client_last_name">Фамилия:</label>
+                <input type="text" class="form-control" id="client_last_name" value="" disabled>
             </div>
-            <div>
+            <div class="form-group">
+                <label for="client_first_name">Имя:</label>
+                <input type="text" class="form-control" id="client_first_name" value="" disabled>
+            </div>
+            <div class="form-group">
+                <label for="client_middle_name">Отчество:</label>
+                <input type="text" class="form-control" id="client_middle_name" value="" disabled>
+            </div>
+            <div class="form-group">
                 <label for="client_email">Email клиента:</label>
-                <input type="email" id="client_email" value="" disabled>
+                <input type="email" class="form-control" id="client_email" value="" disabled>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="client_phone">Телефон клиента:</label>
-                <input type="text" id="client_phone" value="" disabled>
+                <input type="text" class="form-control" id="client_phone" value="" disabled>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="product">Продукт:</label>
-                <input type="text" id="product" value="" disabled>
+                <input type="text" class="form-control" id="product" name="product" value="">
             </div>
-            <div>
+            <div class="form-group">
                 <label for="quantity">Количество:</label>
-                <input type="number" id="quantity" name="quantity" value="" oninput="updateTotalPrice()">
+                <div class="d-flex" style="gap:5px">
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="" oninput="updateTotalPrice()">
+                    <p style="margin-bottom: 0; align-self: flex-end">Шт.</p>
+                </div>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="price">Цена:</label>
-                <input type="text" id="price" name="price" value="" oninput="updateTotalPrice()">
+                <div class="d-flex" style="gap:5px">
+                    <input type="text" class="form-control" id="price" name="price" value="" oninput="updateTotalPrice()">
+                    <p style="margin-bottom: 0; align-self: flex-end">Руб.</p>
+                </div>
             </div>
-            <div>
-                <label for="total_price">Итого</label>
-                <input type="text" id="total_price" name="total_price" value="" disabled>
+            <div class="form-group">
+                <label for="total_price">Итого:</label>
+                <div class="d-flex" style="gap:5px">
+                    <input type="text" class="form-control" id="total_price" name="total_price" value="" disabled>
+                    <p style="margin-bottom: 0; align-self: flex-end">Руб.</p>
+                </div>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="description">Описание:</label>
-                <input type="text" id="description" name="description" value="">
+                <input type="text" class="form-control" id="description" name="description" value="">
             </div>
-            <div>
+            <div class="form-group">
                 <label for="status">Статус:</label>
-                <select id="status" name="status">
+                <select id="status" style="border-radius: 5px" name="status" class="form-control">
                     <option value="Pending">В обработке</option>
                     <option value="Completed">Выполнен</option>
                     <option value="Cancelled">Завершен</option>
                 </select>
             </div>
-            <button id="order-form-send" type="button">Сохранить изменения</button>
+            <button id="order-form-send" type="button" class="btn btn-primary">Сохранить изменения</button>
         </form>
     </div>
+</main>
 
-    <script>
-        // Функция для обновления итоговой цены
-        function updateTotalPrice() {
-            const price = parseFloat(document.getElementById('price').value) || 0;
-            const quantity = parseInt(document.getElementById('quantity').value) || 0;
-            const totalPrice = price * quantity;
-            document.getElementById('total_price').value = totalPrice.toFixed(2);
-        }
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Получаем данные заказа при загрузке страницы
-        fetch('/api/orders/get/{{ order_id }}/', {
+<script>
+    // Функция для обновления итоговой цены
+    function updateTotalPrice() {
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const quantity = parseInt(document.getElementById('quantity').value) || 0;
+        const totalPrice = price * quantity;
+        document.getElementById('total_price').value = totalPrice.toFixed(2);
+    }
+
+    // Получаем данные заказа при загрузке страницы
+    fetch('/api/orders/get/{{ order_id }}/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+    })
+    .then(response => response.json())
+    .then(result => {
+        let fullName = result.client.client.full_name.split(' ')
+        document.getElementById('client_last_name').value = fullName[0] || '';
+        document.getElementById('client_first_name').value = fullName[1] || '';
+        document.getElementById('client_middle_name').value = fullName[2] || '';
+
+        document.getElementById('client_email').value = result.client.client.email;
+        document.getElementById('client_phone').value = result.client.client.mobile_phone;
+        document.getElementById('product').value = result.client.product;
+        document.getElementById('quantity').value = result.client.quantity;
+        document.getElementById('price').value = result.client.price;
+        document.getElementById('total_price').value = result.client.total_price;
+        document.getElementById('description').value = result.client.description;
+        document.getElementById('status').value = result.client.status;
+    })
+    .catch(error => console.error('Ошибка при загрузке данных:', error));
+
+    // Отправка формы и редирект на страницу /orders/ после успешного обновления
+    document.getElementById('order-form-send').addEventListener('click', function () {
+        // Получаем данные из формы
+        const formData = new FormData(document.getElementById('order-form'));
+
+        // Отправляем данные на сервер
+        fetch('/api/orders/edit/{{ order_id }}/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}'
-            }
+            },
+            body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                console.error('Ошибка HTTP:', response.status);
-                throw new Error('Ошибка при запросе данных');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
-            document.getElementById('client_full_name').value = result.client.client.full_name;
-            document.getElementById('client_email').value = result.client.client.email;
-            document.getElementById('client_phone').value = result.client.client.mobile_phone;
-            document.getElementById('product').value = result.client.product;
-            document.getElementById('quantity').value = result.client.quantity;
-            document.getElementById('price').value = result.client.price;
-            document.getElementById('total_price').value = result.client.total_price;
-            document.getElementById('description').value = result.client.description;
-            document.getElementById('status').value = result.client.status;
+            if (result.success){
+                window.location.href = `/orders/${result.id}/`;
+            } else {
+                alert('Ошибка при сохранении заказа');
+            }
         })
-        .catch(error => console.error('Ошибка при загрузке данных:', error));
+        .catch(error => console.error('Ошибка при сохранении:', error));
+    });
+</script>
 
-        // Отправка формы и редирект на страницу /orders/ после успешного обновления
-        document.getElementById('order-form-send').addEventListener('click', function () {
-            // Получаем данные из формы
-            const formData = new FormData(document.getElementById('order-form'));
-
-            // Отправляем данные на сервер
-            fetch('/api/orders/edit/{{ order_id }}/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                if (result.success){
-                    window.location.href = `/orders/${result.id}/`;
-                }
-                else {
-                    window.location.href = `/orders/${result.id}/`;
-                }
-
-            })
-
-        });
-    </script>
 </body>
 </html>

@@ -114,3 +114,9 @@ th.sortable {
 .buttons *{
     border-radius: 20px !important
 }
+
+@media (max-width: 360px) {
+    .buttons *{
+        margin-bottom: 5px;
+    }
+}
