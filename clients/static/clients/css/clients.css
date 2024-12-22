@@ -110,3 +110,7 @@ th.sortable {
         width: 140px !important;
     }
 }
+
+.buttons *{
+    border-radius: 20px !important
+}

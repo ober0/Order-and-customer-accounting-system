@@ -1,22 +1,36 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client #{{ client_id }}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'clients/css/clients.css' %}">
 </head>
 <body>
-     {% include 'main/notifications.html' %}
+
+{% include 'main/header.html' %}
+
+<main class="container mt-4">
+    {% include 'main/notifications.html' %}
 
     <div class="client">
-        <div class="data"></div>
-        <div class="buttons">
-            <a href="/clients/{{ client_id }}/edit/">Изменить</a>
-            <input id="delete-btn" type="button" value="Удалить">
+        <div class="data">
+            <!-- Данные клиента будут загружены сюда -->
+        </div>
+        <div class="buttons mt-4">
+            <a href="/orders/?client_id={{ client_id }}" class="btn btn-info ">Заказы клиента</a>
+            <a href="/clients/{{ client_id }}/edit/" class="btn btn-warning">Изменить</a>
+            <input id="delete-btn" type="button" value="Удалить" class="btn btn-danger">
         </div>
     </div>
 
-    <a href="/orders/?client_id={{ client_id }}">Заказы клиента</a>
-</body>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // Получение данных клиента
@@ -33,9 +47,18 @@
             document.querySelector('.data').innerHTML = `
                 <div class="client-details">
                     <h2>Детали клиента #${client.id}</h2>
-                    <p><strong>Имя:</strong> ${client.first_name} ${client.middle_name} ${client.last_name}</p>
-                    <p><strong>Email:</strong> ${client.email}</p>
-                    <p><strong>Телефон:</strong> ${client.mobile_phone}</p>
+                    <div class="form-group">
+                        <label for="client_name"><strong>ФИО:</strong></label>
+                        <input type="text" class="form-control" id="client_name" value="${client.first_name} ${client.middle_name} ${client.last_name}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_email"><strong>Email:</strong></label>
+                        <input type="email" class="form-control" id="client_email" value="${client.email}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_mobile_phone"><strong>Телефон:</strong></label>
+                        <input type="text" class="form-control" id="client_mobile_phone" value="${client.mobile_phone}" readonly>
+                    </div>
                 </div>
             `;
         } else {
@@ -46,21 +69,25 @@
 
     // Удаление клиента
     document.getElementById('delete-btn').addEventListener('click', function () {
-        fetch('/api/clients/delete/{{ client_id }}/', {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                window.location.href = '/clients/';
-            } else {
-                alert('Ошибка при удалении клиента');
-            }
-        })
-        .catch(error => console.error('Ошибка:', error));
+        if (confirm("Вы уверены, что хотите удалить этого клиента? Будут удалены все связанные с ним заказы!")) {
+            fetch('/api/clients/delete/{{ client_id }}/', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    window.location.href = '/clients/';
+                } else {
+                    alert('Ошибка при удалении клиента');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
     });
 </script>
+
+</body>
 </html>
