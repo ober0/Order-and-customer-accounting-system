@@ -420,7 +420,7 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 ## Используемые технологии
 
-- **Backend** и '**API**
+- **Backend** и **API**
 
      - Python(Django)
      - drf, sqlite3
@@ -435,7 +435,7 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 - **Мобильное приложение**
 
-     - Android Studio(Kotlin)
+     - Android Studio (Kotlin, Target API: 31)
 
 ## **Участники проекта**
 
