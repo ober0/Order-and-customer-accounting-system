@@ -1,14 +1,11 @@
 import json
 import re
 from datetime import timedelta
-
 import pytz
 from django.db.models.functions import Concat
-from reportlab.lib import fonts
-
 from reports.models import Report
 from django.contrib import messages
-from django.db.models import Q, Sum, F, Value
+from django.db.models import Q, F, Value
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -16,8 +13,6 @@ from django.views.decorators.csrf import csrf_exempt
 from clients.models import Clients
 from orders.models import Orders
 from .decorators import jwt_or_csrf_required
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from io import BytesIO
 
 @csrf_exempt
@@ -29,7 +24,7 @@ def add_client(request):
         middle_name = request.POST.get('middle_name')
         mobile_phone = request.POST.get('mobile_phone')
         email = request.POST.get('email')
-
+        
         client_with_this_email = Clients.objects.filter(email=email).first()
 
         if client_with_this_email:
