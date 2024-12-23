@@ -397,7 +397,7 @@
 - **Backend и API**: Django, Django Rest Framework, Django ORM, sqlite3
 - **DevOps**: VDS Ubuntu 22.04, Gunicorn, Nginx, Git
 - **Frontend**: HTML, CSS, JS
-- **Мобильное приложение**: Kotlin (Android Studio)
+- **Мобильное приложение**: Kotlin, Jetpack Compose, Coroutines
 
 ## Участники проекта
 
