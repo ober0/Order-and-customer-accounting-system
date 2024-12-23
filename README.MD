@@ -418,27 +418,26 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 **
 
-"**Используемые технологии**"
+## Используемые технологии
 
-'**Back-end**' and '**API**'
+- **Backend** и '**API**
 
-Python(Django)
+     - Python(Django)
+     - drf, sqlite3
 
-drf, sqlite3
+- **Frontend**
 
-'**Front-end**'
+     - HTML, CSS, JS
 
-HTML, css, js
+- **UX/UI-прототипы**
 
-'**UX/UI prototypes**'
+     - Figma
 
-Figma
+- **Мобильное приложение**
 
-'**Mobile app**'
+     - Android Studio(Kotlin)
 
-Android Studio(Kotlin)
-
-'**Участники проекта**'
+## **Участники проекта**
 
 **Руслан Онищенко** (Backend разработчик, главный разработчик)
 
