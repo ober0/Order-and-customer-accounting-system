@@ -65,9 +65,9 @@ footer {
 }
 
 
-@media (max-width: 1200px) {
+@media (max-width: 1199px) {
   .user-logo{
-    display: none;
+    display: none !important;
   }
 }
 
