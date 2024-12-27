@@ -391,7 +391,7 @@
 
 ![0f54e6a3-1288-4942-af13-1a199f60ddb6](https://github.com/user-attachments/assets/ee138014-7332-4d39-8043-bb5373d8bf3e)
 
-![ab5f78ee-00d1-46d7-9997-1e62b2702a0e](https://github.com/user-attachments/assets/3092049d-0478-431a-8787-3df6668e03cc)
+![photo_2024-12-26_18-00-03](https://github.com/user-attachments/assets/feb1cf3b-0020-4c30-8cfe-9fc06307c8cc)
 
 ![24eda96c-90fe-4006-87cb-f609d0035565](https://github.com/user-attachments/assets/7f72f423-c3bd-4375-9975-491b939da00a)
 
